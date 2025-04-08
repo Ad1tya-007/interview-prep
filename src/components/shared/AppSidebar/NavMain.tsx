@@ -16,16 +16,24 @@ import {
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
-type NavItem = {
+type UpperNavItem = {
   title: string;
-  url?: string;
+  url: string;
   icon: LucideIcon;
 };
 
-const items: NavItem[] = [
+type LowerNavItem = {
+  title: string;
+  icon: LucideIcon;
+};
+
+const upperItems: UpperNavItem[] = [
   { title: 'Explore', url: '#', icon: Compass },
   { title: 'Your Interviews', url: '#', icon: Star },
   { title: 'Reports', url: '#', icon: NotepadText },
+];
+
+const lowerItems: LowerNavItem[] = [
   { title: 'Support', icon: LifeBuoy },
   { title: 'Feedback', icon: Send },
 ];
@@ -35,14 +43,12 @@ export function NavMain() {
   return (
     <SidebarGroup className="h-full justify-between">
       <SidebarMenu className="gap-2">
-        {items.slice(0, 3).map((item) => (
+        {upperItems.map((item) => (
           <SidebarMenuItem key={item.title}>
             <SidebarMenuButton
               tooltip={item.title}
               onClick={() => {
-                if (item.url) {
-                  router.push(item.url);
-                }
+                router.push(item.url);
               }}
               className="hover:cursor-pointer">
               <item.icon />
@@ -52,7 +58,7 @@ export function NavMain() {
         ))}
       </SidebarMenu>
       <SidebarMenu>
-        {items.slice(3).map((item) => (
+        {lowerItems.map((item) => (
           <SidebarMenuItem key={item.title}>
             <SidebarMenuButton tooltip={item.title}>
               <item.icon />
