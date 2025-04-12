@@ -9,6 +9,8 @@ import {
 } from 'react';
 import { User, AuthChangeEvent, Session } from '@supabase/supabase-js';
 import { createClient } from '@supabase/client';
+import { usePathname, useRouter } from 'next/navigation';
+import { logout as serverLogout } from '@/app/auth/actions';
 
 type AuthContextType = {
   user: User | null;
@@ -21,6 +23,8 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
+  const pathname = usePathname();
 
   // Use createClient which is already a singleton with caching
   const supabase = createClient();
@@ -51,21 +55,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
   }, [supabase]);
 
+  // Handle redirects based on auth state and current path
+  useEffect(() => {
+    if (!isLoading) {
+      const isAuthPage = pathname === '/auth';
+
+      if (!user && !isAuthPage) {
+        router.replace('/auth');
+      } else if (user && isAuthPage) {
+        router.replace('/dashboard');
+      }
+    }
+  }, [user, isLoading, pathname, router]);
+
   const logout = async () => {
-    console.log('Logout function called');
     try {
-      // Use client-side logout only to avoid CORS issues
-      console.log('Signing out on client side');
-      await supabase.auth.signOut();
-      console.log('Client side signout complete');
-
-      // Update the state
-      console.log('Setting user to null');
+      await serverLogout();
       setUser(null);
-
-      // Force a hard refresh to ensure all auth state is cleared
-      console.log('Redirecting to home page');
-      window.location.replace('/auth');
     } catch (error) {
       console.error('Error signing out:', error);
     }
