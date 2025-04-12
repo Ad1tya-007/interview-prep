@@ -11,21 +11,33 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { useState } from 'react';
+import { sendOtp, verifyOtp } from './actions';
 
 export default function AuthPage() {
   const [showOtpInput, setShowOtpInput] = useState(false);
+  const [email, setEmail] = useState('');
+  const [token, setToken] = useState('');
+  const [error, setError] = useState<string | null>(null);
 
-  const handleOtpSubmit = () => {
-    console.log('OTP submitted');
+  const handleOtpSubmit = async () => {
+    const result = await sendOtp(email);
+    if (result.error) {
+      setError(result.error);
+      return;
+    }
     setShowOtpInput(true);
+    setError(null);
   };
 
-  const handleOtpVerify = () => {
-    console.log('OTP verified');
+  const handleOtpVerify = async () => {
+    const result = await verifyOtp(email, token);
+    if (result?.error) {
+      setError(result.error);
+    }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
+    <div className="min-h-screen flex items-center justify-center w-full">
       <Card className="w-[400px]">
         <CardHeader>
           <CardTitle>{showOtpInput ? 'Enter OTP' : 'Welcome Back'}</CardTitle>
@@ -36,9 +48,16 @@ export default function AuthPage() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
+          {error && <div className="text-red-500 text-sm">{error}</div>}
           {showOtpInput ? (
             <div className="flex flex-col space-y-2">
-              <Input type="text" placeholder="Enter OTP" className="w-full" />
+              <Input
+                type="text"
+                placeholder="Enter OTP"
+                className="w-full"
+                value={token}
+                onChange={(e) => setToken(e.target.value)}
+              />
               <Button className="w-full" onClick={handleOtpVerify}>
                 Verify OTP
               </Button>
@@ -56,6 +75,8 @@ export default function AuthPage() {
                   type="email"
                   placeholder="Enter your email"
                   className="w-full"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
                 <Button className="w-full" onClick={handleOtpSubmit}>
                   Send OTP

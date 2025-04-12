@@ -65,7 +65,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       // Force a hard refresh to ensure all auth state is cleared
       console.log('Redirecting to home page');
-      window.location.replace('/');
+      window.location.replace('/auth');
     } catch (error) {
       console.error('Error signing out:', error);
     }
