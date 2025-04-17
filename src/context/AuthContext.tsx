@@ -45,15 +45,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(
       (event: AuthChangeEvent, session: Session | null) => {
-        setUser(session?.user ?? null);
+        const newUser = session?.user ?? null;
+        setUser(newUser);
         setIsLoading(false);
+
+        // Handle immediate redirects based on auth events
+        if (event === 'SIGNED_IN' && pathname === '/auth') {
+          router.push('/dashboard');
+        } else if (event === 'SIGNED_OUT') {
+          router.push('/auth');
+        }
       }
     );
 
     return () => {
       subscription.unsubscribe();
     };
-  }, [supabase]);
+  }, [supabase, pathname, router]);
 
   // Handle redirects based on auth state and current path
   useEffect(() => {
@@ -61,17 +69,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const isAuthPage = pathname === '/auth';
 
       if (!user && !isAuthPage) {
-        router.replace('/auth');
+        router.push('/auth');
       } else if (user && isAuthPage) {
-        router.replace('/dashboard');
+        router.push('/dashboard');
       }
     }
   }, [user, isLoading, pathname, router]);
 
   const logout = async () => {
     try {
-      await serverLogout();
+      const result = await serverLogout();
+
+      // If there's an error from the server action
+      if (result?.error) {
+        console.error('Error during logout:', result.error);
+        return;
+      }
+
+      // Handle client-side state update and navigation
       setUser(null);
+      router.push('/auth');
     } catch (error) {
       console.error('Error signing out:', error);
     }

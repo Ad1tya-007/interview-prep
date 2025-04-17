@@ -1,7 +1,6 @@
 'use server'
 
 import { createClient } from '@supabase/server'
-import { redirect } from 'next/navigation'
 
 export async function sendOtp(email: string) {
   const supabase = await createClient()
@@ -20,7 +19,7 @@ export async function sendOtp(email: string) {
 export async function verifyOtp(email: string, token: string) {
   const supabase = await createClient()
 
-  const { error } = await supabase.auth.verifyOtp({
+  const { error, data } = await supabase.auth.verifyOtp({
     email,
     token,
     type: 'email',
@@ -30,7 +29,7 @@ export async function verifyOtp(email: string, token: string) {
     return { error: error.message }
   }
 
-  redirect('/dashboard')
+  return { success: true, user: data.user }
 }
 
 export async function logout() {
@@ -42,6 +41,6 @@ export async function logout() {
     return { error: error.message }
   }
 
-  redirect('/auth')
+  return { success: true }
 } 
 
