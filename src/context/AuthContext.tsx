@@ -51,9 +51,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         // Handle immediate redirects based on auth events
         if (event === 'SIGNED_IN' && pathname === '/auth') {
-          router.push('/dashboard');
+          router.replace('/dashboard');
         } else if (event === 'SIGNED_OUT') {
-          router.push('/auth');
+          router.replace('/auth');
         }
       }
     );
@@ -69,9 +69,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const isAuthPage = pathname === '/auth';
 
       if (!user && !isAuthPage) {
-        router.push('/auth');
+        router.replace('/auth');
       } else if (user && isAuthPage) {
-        router.push('/dashboard');
+        router.replace('/dashboard');
       }
     }
   }, [user, isLoading, pathname, router]);
@@ -88,7 +88,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       // Handle client-side state update and navigation
       setUser(null);
-      router.push('/auth');
+      router.replace('/auth');
     } catch (error) {
       console.error('Error signing out:', error);
     }
