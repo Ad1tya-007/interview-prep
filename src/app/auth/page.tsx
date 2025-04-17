@@ -12,12 +12,14 @@ import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { useState } from 'react';
 import { sendOtp, verifyOtp } from './actions';
+import { useRouter } from 'next/navigation';
 
 export default function AuthPage() {
   const [showOtpInput, setShowOtpInput] = useState(false);
   const [email, setEmail] = useState('');
   const [token, setToken] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   const handleOtpSubmit = async () => {
     const result = await sendOtp(email);
@@ -33,6 +35,11 @@ export default function AuthPage() {
     const result = await verifyOtp(email, token);
     if (result?.error) {
       setError(result.error);
+      return;
+    }
+
+    if (result?.success) {
+      router.push('/dashboard');
     }
   };
 

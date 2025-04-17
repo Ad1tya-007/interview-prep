@@ -45,15 +45,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(
       (event: AuthChangeEvent, session: Session | null) => {
-        setUser(session?.user ?? null);
+        const newUser = session?.user ?? null;
+        setUser(newUser);
         setIsLoading(false);
+
+        // Handle immediate redirects based on auth events
+        if (event === 'SIGNED_IN' && pathname === '/auth') {
+          router.replace('/dashboard');
+        } else if (event === 'SIGNED_OUT') {
+          router.replace('/auth');
+        }
       }
     );
 
     return () => {
       subscription.unsubscribe();
     };
-  }, [supabase]);
+  }, [supabase, pathname, router]);
 
   // Handle redirects based on auth state and current path
   useEffect(() => {
@@ -70,8 +78,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = async () => {
     try {
-      await serverLogout();
+      const result = await serverLogout();
+
+      // If there's an error from the server action
+      if (result?.error) {
+        console.error('Error during logout:', result.error);
+        return;
+      }
+
+      // Handle client-side state update and navigation
       setUser(null);
+      router.replace('/auth');
     } catch (error) {
       console.error('Error signing out:', error);
     }
