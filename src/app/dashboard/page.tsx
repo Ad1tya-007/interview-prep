@@ -1,9 +1,12 @@
-import { Button } from '@/components/ui';
+import { Banner, InterviewCards } from '@/components/shared';
 
 export default function Dashboard() {
   return (
     <div>
-      <Button>Click Me</Button>
+      <div className="w-full px-8 space-y-4">
+        <Banner />
+        <InterviewCards />
+      </div>
     </div>
   );
 }

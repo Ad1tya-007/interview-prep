@@ -11,7 +11,7 @@ export function AppSidebarTrigger() {
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <SidebarTrigger className="fixed top-5 right-5 z-10" />
+          <SidebarTrigger className="fixed top-5 right-3 z-10" />
         </TooltipTrigger>
         <TooltipContent>
           <p>Toggle Sidebar</p>
