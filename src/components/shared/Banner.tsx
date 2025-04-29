@@ -9,7 +9,7 @@ import {
 
 export default function Banner() {
   return (
-    <Card className="w-full text-center shadow-none dark py-4">
+    <Card className="w-full text-center shadow-none py-4">
       <CardHeader>
         <CardTitle className="mb-2 text-3xl font-bold">
           Power up your interview skills
