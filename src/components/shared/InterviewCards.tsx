@@ -16,6 +16,7 @@ import {
   ArrowUp,
   CalendarIcon,
   Search,
+  StarIcon,
   User2Icon,
   X,
 } from 'lucide-react';
@@ -34,6 +35,7 @@ export default function InterviewCards() {
           'Explore a collection of Shadcn UI blocks and components, ready to preview and copy.',
         tags: ['UI', 'Components', 'Preview'],
         date: '2022-01-01',
+        stars: 4,
       },
       {
         title: 'React Interview',
@@ -41,6 +43,7 @@ export default function InterviewCards() {
           'Practice your React skills with a set of challenging questions and exercises.',
         tags: ['React', 'Frontend', 'JavaScript'],
         date: '2022-02-01',
+        stars: 5,
       },
       {
         title: 'Frontend Interview',
@@ -48,6 +51,7 @@ export default function InterviewCards() {
           'Test your knowledge of frontend development with a comprehensive set of questions and scenarios.',
         tags: ['Frontend', 'HTML', 'JavaScript'],
         date: '2022-03-01',
+        stars: 3,
       },
       {
         title: 'Backend Interview',
@@ -55,6 +59,7 @@ export default function InterviewCards() {
           'Improve your backend skills with a set of challenging questions and real-world scenarios.',
         tags: ['Backend', 'Server', 'API'],
         date: '2022-04-01',
+        stars: 4,
       },
       {
         title: 'Fullstack Interview',
@@ -62,6 +67,7 @@ export default function InterviewCards() {
           'Prepare for your fullstack interview with a comprehensive set of questions and exercises.',
         tags: ['Fullstack', 'Frontend', 'Backend'],
         date: '2022-05-01',
+        stars: 5,
       },
       {
         title: 'Data Science Interview',
@@ -69,6 +75,7 @@ export default function InterviewCards() {
           'Practice your data science skills with a set of challenging questions and real-world scenarios.',
         tags: ['Machine Learning', 'Statistics'],
         date: '2022-06-01',
+        stars: 4,
       },
       {
         title: 'DevOps Interview',
@@ -76,6 +83,7 @@ export default function InterviewCards() {
           'Improve your DevOps skills with a set of challenging questions and real-world scenarios.',
         tags: ['DevOps', 'Cloud', 'Automation'],
         date: '2022-07-01',
+        stars: 3,
       },
       {
         title: 'Cybersecurity Interview',
@@ -83,6 +91,7 @@ export default function InterviewCards() {
           'Test your cybersecurity skills with a set of challenging questions and real-world scenarios.',
         tags: ['Security', 'Networking', 'Threat Analysis'],
         date: '2022-08-01',
+        stars: 5,
       },
       {
         title: 'Artificial Intelligence Interview',
@@ -90,6 +99,7 @@ export default function InterviewCards() {
           'Prepare for your artificial intelligence interview with a comprehensive set of questions and exercises.',
         tags: ['AI', 'Machine Learning', 'Deep Learning'],
         date: '2022-09-01',
+        stars: 4,
       },
       {
         title: 'Cloud Computing Interview',
@@ -97,6 +107,7 @@ export default function InterviewCards() {
           'Improve your cloud computing skills with a set of challenging questions and real-world scenarios.',
         tags: ['Cloud', 'AWS', 'Azure'],
         date: '2022-10-01',
+        stars: 3,
       },
       {
         title: 'Database Administration Interview',
@@ -104,6 +115,7 @@ export default function InterviewCards() {
           'Practice your database administration skills with a set of challenging questions and real-world scenarios.',
         tags: ['Database', 'SQL', 'NoSQL'],
         date: '2022-11-01',
+        stars: 4,
       },
     ],
     []
@@ -216,13 +228,19 @@ export default function InterviewCards() {
                 </div>
                 <p className="line-clamp-1">{card.title}</p>
               </CardTitle>
-              <CardDescription className="flex flex-row items-center gap-2">
-                <CalendarIcon className="h-4 w-4" />
-                <p>{card.date}</p>
+              <CardDescription className="grid grid-cols-2">
+                <div className="flex flex-row items-center gap-2">
+                  <CalendarIcon className="h-4 w-4" />
+                  <p>{card.date}</p>
+                </div>
+                <div className="flex flex-row items-center gap-2">
+                  <StarIcon className="h-4 w-4 hover:text-yellow-400 hover:fill-yellow-400" />
+                  <p>{card.stars}</p>
+                </div>
               </CardDescription>
             </CardHeader>
             <CardContent className="text-[15px] text-muted-foreground h-[150px] overflow-hidden">
-              <p className="line-clamp-4">{card.description}</p>
+              <p className="line-clamp-4 text-sm">{card.description}</p>
               <div className="flex flex-wrap gap-2 mt-4">
                 {card.tags.map((tag, index) => (
                   <Badge key={index}>{tag}</Badge>
