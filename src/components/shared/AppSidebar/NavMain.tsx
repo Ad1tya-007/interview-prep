@@ -28,8 +28,8 @@ type LowerNavItem = {
 };
 
 const upperItems: UpperNavItem[] = [
-  { title: 'Explore', url: '#', icon: Compass },
-  { title: 'Your Interviews', url: '#', icon: Star },
+  { title: 'Explore', url: '/explore', icon: Compass },
+  { title: 'Your Interviews', url: '/interviews', icon: Star },
   { title: 'Reports', url: '#', icon: NotepadText },
 ];
 

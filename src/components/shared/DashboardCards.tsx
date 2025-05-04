@@ -22,7 +22,7 @@ import {
 } from 'lucide-react';
 import { useState, useMemo } from 'react';
 
-export default function InterviewCards() {
+export default function DashboardCards() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [showAllTags, setShowAllTags] = useState(false);
