@@ -11,10 +11,12 @@ import {
   CardDescription,
   CardTitle,
 } from '@/components/ui';
+import { useAuth } from '@/context/AuthContext';
 import {
   ArrowDown,
   ArrowUp,
   CalendarIcon,
+  Loader2Icon,
   Search,
   StarIcon,
   User2Icon,
@@ -26,96 +28,60 @@ export default function DashboardCards() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [showAllTags, setShowAllTags] = useState(false);
+  const { isLoading } = useAuth();
 
-  const cards = useMemo(
+  const interviews = useMemo(
     () => [
       {
-        title: 'Shadcn Interview',
+        id: 1,
+        title: 'Google Frontend Interview',
         description:
-          'Explore a collection of Shadcn UI blocks and components, ready to preview and copy.',
-        tags: ['UI', 'Components', 'Preview'],
-        date: '2022-01-01',
-        stars: 4,
+          'Frontend interview focusing on JavaScript, React, and system design.',
+        date: '2023-05-15',
+        tags: ['Frontend', 'React', 'JavaScript'],
       },
       {
-        title: 'React Interview',
+        id: 2,
+        title: 'Amazon Backend Interview',
         description:
-          'Practice your React skills with a set of challenging questions and exercises.',
-        tags: ['React', 'Frontend', 'JavaScript'],
-        date: '2022-02-01',
-        stars: 5,
+          'Backend focused interview covering algorithms, system design, and AWS services.',
+        date: '2023-06-22',
+        tags: ['Backend', 'AWS', 'Algorithms'],
+        rating: 85,
       },
       {
-        title: 'Frontend Interview',
+        id: 3,
+        title: 'Microsoft Full Stack Interview',
         description:
-          'Test your knowledge of frontend development with a comprehensive set of questions and scenarios.',
-        tags: ['Frontend', 'HTML', 'JavaScript'],
-        date: '2022-03-01',
-        stars: 3,
+          'Full stack interview with questions on React, .NET, and database design.',
+        date: '2023-07-10',
+        tags: ['Fullstack', 'React', '.NET'],
+        rating: 78,
       },
       {
-        title: 'Backend Interview',
+        id: 4,
+        title: 'Facebook Interview',
         description:
-          'Improve your backend skills with a set of challenging questions and real-world scenarios.',
-        tags: ['Backend', 'Server', 'API'],
-        date: '2022-04-01',
-        stars: 4,
+          'System design interview focusing on scalable architectures for social media platforms.',
+        date: '2023-08-05',
+        tags: ['System Design', 'Scalability'],
+        rating: 89,
       },
       {
-        title: 'Fullstack Interview',
+        id: 5,
+        title: 'Netflix UI Engineer Interview',
         description:
-          'Prepare for your fullstack interview with a comprehensive set of questions and exercises.',
-        tags: ['Fullstack', 'Frontend', 'Backend'],
-        date: '2022-05-01',
-        stars: 5,
+          'UI engineering interview with focus on responsive design and performance optimization.',
+        date: '2023-09-12',
+        tags: ['UI', 'Frontend', 'Performance'],
       },
       {
-        title: 'Data Science Interview',
+        id: 6,
+        title: 'Twitter Backend Interview',
         description:
-          'Practice your data science skills with a set of challenging questions and real-world scenarios.',
-        tags: ['Machine Learning', 'Statistics'],
-        date: '2022-06-01',
-        stars: 4,
-      },
-      {
-        title: 'DevOps Interview',
-        description:
-          'Improve your DevOps skills with a set of challenging questions and real-world scenarios.',
-        tags: ['DevOps', 'Cloud', 'Automation'],
-        date: '2022-07-01',
-        stars: 3,
-      },
-      {
-        title: 'Cybersecurity Interview',
-        description:
-          'Test your cybersecurity skills with a set of challenging questions and real-world scenarios.',
-        tags: ['Security', 'Networking', 'Threat Analysis'],
-        date: '2022-08-01',
-        stars: 5,
-      },
-      {
-        title: 'Artificial Intelligence Interview',
-        description:
-          'Prepare for your artificial intelligence interview with a comprehensive set of questions and exercises.',
-        tags: ['AI', 'Machine Learning', 'Deep Learning'],
-        date: '2022-09-01',
-        stars: 4,
-      },
-      {
-        title: 'Cloud Computing Interview',
-        description:
-          'Improve your cloud computing skills with a set of challenging questions and real-world scenarios.',
-        tags: ['Cloud', 'AWS', 'Azure'],
-        date: '2022-10-01',
-        stars: 3,
-      },
-      {
-        title: 'Database Administration Interview',
-        description:
-          'Practice your database administration skills with a set of challenging questions and real-world scenarios.',
-        tags: ['Database', 'SQL', 'NoSQL'],
-        date: '2022-11-01',
-        stars: 4,
+          'Backend interview covering distributed systems and real-time processing.',
+        date: '2023-10-08',
+        tags: ['Backend', 'Distributed Systems'],
       },
     ],
     []
@@ -124,11 +90,19 @@ export default function DashboardCards() {
   // Extract all unique tags
   const allTags = useMemo(() => {
     const tags = new Set<string>();
-    cards.forEach((card) => {
-      card.tags.forEach((tag) => tags.add(tag));
+    interviews.forEach((interview) => {
+      interview.tags.forEach((tag) => tags.add(tag));
     });
     return Array.from(tags).sort();
-  }, [cards]);
+  }, [interviews]);
+
+  if (isLoading) {
+    return (
+      <div className="h-[300] flex items-center justify-center">
+        <Loader2Icon className="animate-spin h-10 w-10 text-muted-foreground" />
+      </div>
+    );
+  }
 
   // Toggle tag selection
   const toggleTag = (tag: string) => {
@@ -145,23 +119,22 @@ export default function DashboardCards() {
   // Display limited tags or all tags based on state
   const displayedTags = showAllTags ? allTags : allTags.slice(0, 8);
 
-  const filteredCards = cards.filter((card) => {
+  const filteredInterviews = interviews.filter((interview) => {
     // Filter by search query (title or description)
     const matchesSearch =
-      card.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      card.description.toLowerCase().includes(searchQuery.toLowerCase());
+      interview.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      interview.description.toLowerCase().includes(searchQuery.toLowerCase());
 
     // Filter by tags if any are selected
     const matchesTags =
       selectedTags.length === 0 ||
-      selectedTags.some((tag) => card.tags.includes(tag));
+      selectedTags.some((tag) => interview.tags.includes(tag));
 
     return matchesSearch && matchesTags;
   });
 
   return (
     <div>
-      {/* SEARCH */}
       <div className="space-y-4 mb-6">
         <div className="relative w-full">
           <Search className="absolute left-3.5 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -174,7 +147,6 @@ export default function DashboardCards() {
           />
         </div>
 
-        {/* TAG FILTERS */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-medium">Filter by tags</h3>
@@ -219,36 +191,38 @@ export default function DashboardCards() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        {filteredCards.map((card, index) => (
-          <Card key={index}>
+        {filteredInterviews.map((interview) => (
+          <Card key={interview.id}>
             <CardHeader>
-              <CardTitle className="flex flex-row items-center gap-3 font-semibold">
+              <CardTitle className="flex flex-row items-center gap-2 font-normal text-muted-foreground">
                 <div className="h-8 w-8 flex items-center justify-center bg-primary text-primary-foreground rounded-full">
                   <User2Icon className="h-5 w-5" />
                 </div>
-                <p className="line-clamp-1">{card.title}</p>
+                <p className="line-clamp-1">{interview.title}</p>
               </CardTitle>
-              <CardDescription className="grid grid-cols-2">
-                <div className="flex flex-row items-center gap-2">
+              <CardDescription className="grid grid-cols-3">
+                <div className="flex flex-row items-center gap-2 col-span-2">
                   <CalendarIcon className="h-4 w-4" />
-                  <p>{card.date}</p>
+                  <p>{interview.date}</p>
                 </div>
-                <div className="flex flex-row items-center gap-2">
-                  <StarIcon className="h-4 w-4 hover:text-yellow-400 hover:fill-yellow-400" />
-                  <p>{card.stars}</p>
-                </div>
+                {interview.rating && (
+                  <div className="flex flex-row items-center gap-2">
+                    <StarIcon className="h-4 w-4 text-yellow-400 fill-yellow-400" />
+                    <p>{interview.rating} / 100</p>
+                  </div>
+                )}
               </CardDescription>
             </CardHeader>
             <CardContent className="text-[15px] text-muted-foreground h-[150px] overflow-hidden">
-              <p className="line-clamp-4 text-sm">{card.description}</p>
+              <p className="line-clamp-4 text-sm">{interview.description}</p>
               <div className="flex flex-wrap gap-2 mt-4">
-                {card.tags.map((tag, index) => (
+                {interview.tags.map((tag, index) => (
                   <Badge key={index}>{tag}</Badge>
                 ))}
               </div>
             </CardContent>
             <CardFooter className="w-full flex flex-row justify-center gap-2">
-              <Button variant="outline" className="w-1/2">
+              <Button variant="outline" className="w-1/2 text-muted-foreground">
                 View
               </Button>
               <Button className="w-1/2">Start</Button>
