@@ -51,7 +51,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         // Handle immediate redirects based on auth events
         if (event === 'SIGNED_IN' && pathname === '/auth') {
-          router.replace('/dashboard');
+          router.replace('/explore');
         } else if (event === 'SIGNED_OUT') {
           router.replace('/auth');
         }
@@ -71,7 +71,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (!user && !isAuthPage) {
         router.replace('/auth');
       } else if (user && isAuthPage) {
-        router.replace('/dashboard');
+        router.replace('/explore');
       }
     }
   }, [user, isLoading, pathname, router]);
