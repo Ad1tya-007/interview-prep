@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import {
@@ -20,12 +21,16 @@ import {
   User2Icon,
 } from 'lucide-react';
 import { useState, useMemo } from 'react';
+import InterviewDialog from './InterviewDialog';
 
 export default function ProfileCards() {
   const { isLoading } = useAuth();
 
   const [searchQuery, setSearchQuery] = useState('');
   const isPro = true;
+
+  const [open, setOpen] = useState(false);
+  const [selectedInterview, setSelectedInterview] = useState<any>(null);
 
   const interviews = useMemo(
     () => [
@@ -35,6 +40,7 @@ export default function ProfileCards() {
         description:
           "This frontend interview delves into the intricacies of JavaScript, React, and system design, providing a comprehensive assessment of a candidate's skills in these areas.",
         date: '2023-05-15',
+
         tags: ['Frontend', 'React', 'JavaScript'],
         rating: 82,
       },
@@ -101,6 +107,16 @@ export default function ProfileCards() {
       interview.description.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const handleViewInterview = (interview: any) => {
+    setSelectedInterview(interview);
+    setOpen(true);
+  };
+
+  const handleCloseInterview = () => {
+    setSelectedInterview(null);
+    setOpen(false);
+  };
+
   return (
     <div>
       <h1 className="text-2xl font-bold mb-6 text-muted-foreground">
@@ -153,7 +169,10 @@ export default function ProfileCards() {
               </div>
             </CardContent>
             <CardFooter className="w-full flex flex-row justify-center gap-2">
-              <Button variant="outline" className="w-1/2 text-muted-foreground">
+              <Button
+                variant="outline"
+                className="w-1/2 text-muted-foreground"
+                onClick={() => handleViewInterview(interview)}>
                 View
               </Button>
               <Button className="w-1/2">Start</Button>
@@ -161,6 +180,12 @@ export default function ProfileCards() {
           </Card>
         ))}
       </div>
+
+      <InterviewDialog
+        interview={selectedInterview}
+        open={open}
+        setOpen={handleCloseInterview}
+      />
     </div>
   );
 }

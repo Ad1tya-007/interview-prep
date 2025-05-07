@@ -1,0 +1,90 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+'use client';
+
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  Button,
+  Badge,
+} from '@/components/ui';
+import { CalendarIcon, UsersIcon } from 'lucide-react';
+import { StarIcon } from 'lucide-react';
+import React from 'react';
+
+interface InterviewDialogProps {
+  interview: any;
+  open: boolean;
+  setOpen: (open: boolean) => void;
+}
+
+const questions: string[] = [
+  'What is your greatest strength and weakness?',
+  'Why do you want to work for our company?',
+  'Where do you see yourself in five years?',
+  'Can you tell me about a time when you overcame a difficult challenge?',
+  'Why are you leaving your current job?',
+  'What do you know about our company culture?',
+  'How do you handle stress and pressure in the workplace?',
+  'Can you describe a project you managed from start to finish?',
+  'How do you prioritize tasks and manage your time?',
+  'Do you have any questions for me?',
+];
+
+export default function InterviewDialog({
+  interview,
+  open,
+  setOpen,
+}: InterviewDialogProps) {
+  if (!interview) return null;
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogContent className="w-[600px]">
+        <DialogHeader>
+          <DialogTitle>{interview.title}</DialogTitle>
+          <div className="flex flex-row gap-4 text-sm">
+            <div className="flex flex-row items-center gap-2 ">
+              <CalendarIcon className="h-4 w-4" />
+              <p>{interview.date}</p>
+            </div>
+
+            <div className="flex flex-row items-center gap-2">
+              <StarIcon className="h-4 w-4 text-yellow-400 fill-yellow-400" />
+              <p>{interview.rating}%</p>
+            </div>
+          </div>
+          <div className="flex flex-row items-center gap-2 text-sm text-muted-foreground">
+            <UsersIcon className="h-4 w-4 text-muted-foreground" />
+            <p>100 people have taken this interview</p>
+          </div>
+          <DialogDescription>{interview.description}</DialogDescription>
+          <div className="flex flex-row items-center gap-2 text-sm text-muted-foreground">
+            <p>Tags: </p>
+            <div className="flex flex-row items-center gap-2">
+              {interview.tags.map((tag: string) => (
+                <Badge key={tag}>{tag}</Badge>
+              ))}
+            </div>
+          </div>
+          <div className="space-y-2">
+            <p>Questions</p>
+            <div className="space-y-2 text-sm text-muted-foreground">
+              {questions.map((question) => (
+                <div key={question}>
+                  <p>Q. {question}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </DialogHeader>
+        <DialogFooter>
+          <Button variant="destructive">Delete Interview</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
