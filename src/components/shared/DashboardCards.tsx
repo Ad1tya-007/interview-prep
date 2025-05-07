@@ -36,7 +36,7 @@ export default function DashboardCards() {
         id: 1,
         title: 'Google Frontend Interview',
         description:
-          'Frontend interview focusing on JavaScript, React, and system design.',
+          "This frontend interview delves into the intricacies of JavaScript, React, and system design, providing a comprehensive assessment of a candidate's skills in these areas.",
         date: '2023-05-15',
         tags: ['Frontend', 'React', 'JavaScript'],
       },
@@ -44,7 +44,7 @@ export default function DashboardCards() {
         id: 2,
         title: 'Amazon Backend Interview',
         description:
-          'Backend focused interview covering algorithms, system design, and AWS services.',
+          'The backend focused interview at Amazon covers a wide range of topics including algorithms, system design, and AWS services, ensuring that candidates have a deep understanding of these critical areas.',
         date: '2023-06-22',
         tags: ['Backend', 'AWS', 'Algorithms'],
         rating: 85,
@@ -190,7 +190,7 @@ export default function DashboardCards() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {filteredInterviews.map((interview) => (
           <Card key={interview.id}>
             <CardHeader>
@@ -208,7 +208,7 @@ export default function DashboardCards() {
                 {interview.rating && (
                   <div className="flex flex-row items-center gap-2">
                     <StarIcon className="h-4 w-4 text-yellow-400 fill-yellow-400" />
-                    <p>{interview.rating} / 100</p>
+                    <p>{interview.rating}%</p>
                   </div>
                 )}
               </CardDescription>

@@ -33,7 +33,7 @@ export default function ProfileCards() {
         id: 1,
         title: 'Google Frontend Interview',
         description:
-          'Frontend interview focusing on JavaScript, React, and system design.',
+          "This frontend interview delves into the intricacies of JavaScript, React, and system design, providing a comprehensive assessment of a candidate's skills in these areas.",
         date: '2023-05-15',
         tags: ['Frontend', 'React', 'JavaScript'],
         rating: 82,
@@ -42,7 +42,7 @@ export default function ProfileCards() {
         id: 2,
         title: 'Amazon Backend Interview',
         description:
-          'Backend focused interview covering algorithms, system design, and AWS services.',
+          'The backend focused interview at Amazon covers a wide range of topics including algorithms, system design, and AWS services, ensuring that candidates have a deep understanding of these critical areas.',
         date: '2023-06-22',
         tags: ['Backend', 'AWS', 'Algorithms'],
         rating: 85,
@@ -51,7 +51,7 @@ export default function ProfileCards() {
         id: 3,
         title: 'Microsoft Full Stack Interview',
         description:
-          'Full stack interview with questions on React, .NET, and database design.',
+          "Full stack interview with questions on React, .NET, and database design, evaluating a candidate's proficiency in both frontend and backend technologies.",
         date: '2023-07-10',
         tags: ['Fullstack', 'React', '.NET'],
         rating: 78,
