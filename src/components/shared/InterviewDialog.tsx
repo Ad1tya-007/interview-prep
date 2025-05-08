@@ -10,10 +10,20 @@ import {
   DialogTitle,
   Button,
   Badge,
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
 } from '@/components/ui';
-import { CalendarIcon, UsersIcon } from 'lucide-react';
-import { StarIcon } from 'lucide-react';
-import React from 'react';
+import {
+  CalendarIcon,
+  UsersIcon,
+  StarIcon,
+  EditIcon,
+  TrashIcon,
+  EllipsisVerticalIcon,
+} from 'lucide-react';
+import { usePathname } from 'next/navigation';
 
 interface InterviewDialogProps {
   interview: any;
@@ -39,12 +49,16 @@ export default function InterviewDialog({
   open,
   setOpen,
 }: InterviewDialogProps) {
+  const pathname = usePathname();
+
+  const isExplore = pathname === '/explore';
+
   if (!interview) return null;
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="w-[600px]">
-        <DialogHeader>
+      <DialogContent className="w-[600px] ">
+        <DialogHeader className="relative">
           <DialogTitle>{interview.title}</DialogTitle>
           <div className="flex flex-row gap-4 text-sm">
             <div className="flex flex-row items-center gap-2 ">
@@ -80,9 +94,30 @@ export default function InterviewDialog({
               ))}
             </div>
           </div>
+          {!isExplore && (
+            <div className="absolute top-0 right-0">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon">
+                    <EllipsisVerticalIcon className="h-6 w-6" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem className="cursor-pointer hover:bg-muted">
+                    <EditIcon className="h-4 w-4 mr-2" />
+                    Edit
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="cursor-pointer hover:bg-muted text-destructive">
+                    <TrashIcon className="h-4 w-4 mr-2" />
+                    Delete
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          )}
         </DialogHeader>
         <DialogFooter>
-          <Button variant="destructive">Delete Interview</Button>
+          <Button>Start Interview</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

@@ -171,11 +171,10 @@ export default function ProfileCards() {
             <CardFooter className="w-full flex flex-row justify-center gap-2">
               <Button
                 variant="outline"
-                className="w-1/2 text-muted-foreground"
+                className="w-full text-muted-foreground"
                 onClick={() => handleViewInterview(interview)}>
                 View
               </Button>
-              <Button className="w-1/2">Start</Button>
             </CardFooter>
           </Card>
         ))}

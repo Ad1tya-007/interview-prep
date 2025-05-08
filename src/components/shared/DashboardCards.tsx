@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import {
@@ -23,12 +24,26 @@ import {
   X,
 } from 'lucide-react';
 import { useState, useMemo } from 'react';
+import InterviewDialog from './InterviewDialog';
 
 export default function DashboardCards() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [showAllTags, setShowAllTags] = useState(false);
   const { isLoading } = useAuth();
+
+  const [selectedInterview, setSelectedInterview] = useState<any | null>(null);
+  const [open, setOpen] = useState(false);
+
+  const handleViewInterview = (interview: any) => {
+    setSelectedInterview(interview);
+    setOpen(true);
+  };
+
+  const handleCloseInterview = () => {
+    setSelectedInterview(null);
+    setOpen(false);
+  };
 
   const interviews = useMemo(
     () => [
@@ -222,14 +237,22 @@ export default function DashboardCards() {
               </div>
             </CardContent>
             <CardFooter className="w-full flex flex-row justify-center gap-2">
-              <Button variant="outline" className="w-1/2 text-muted-foreground">
+              <Button
+                variant="outline"
+                className="w-full text-muted-foreground"
+                onClick={() => handleViewInterview(interview)}>
                 View
               </Button>
-              <Button className="w-1/2">Start</Button>
             </CardFooter>
           </Card>
         ))}
       </div>
+
+      <InterviewDialog
+        interview={selectedInterview}
+        open={open}
+        setOpen={handleCloseInterview}
+      />
     </div>
   );
 }
