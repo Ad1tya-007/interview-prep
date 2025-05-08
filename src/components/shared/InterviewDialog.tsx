@@ -24,6 +24,7 @@ import {
   EllipsisVerticalIcon,
 } from 'lucide-react';
 import { usePathname } from 'next/navigation';
+import RoleBadge from './RoleBadge';
 
 interface InterviewDialogProps {
   interview: any;
@@ -59,7 +60,10 @@ export default function InterviewDialog({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="w-[600px] ">
         <DialogHeader className="relative">
-          <DialogTitle>{interview.title}</DialogTitle>
+          <DialogTitle className="flex flex-row gap-2 items-center">
+            {interview.title}
+            <RoleBadge type={interview.type as 'junior' | 'mid' | 'senior'} />
+          </DialogTitle>
           <div className="flex flex-row gap-4 text-sm">
             <div className="flex flex-row items-center gap-2 ">
               <CalendarIcon className="h-4 w-4" />

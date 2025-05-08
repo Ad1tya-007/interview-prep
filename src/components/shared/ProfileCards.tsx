@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import { useState, useMemo } from 'react';
 import InterviewDialog from './InterviewDialog';
+import RoleBadge from './RoleBadge';
 
 export default function ProfileCards() {
   const { isLoading } = useAuth();
@@ -43,6 +44,7 @@ export default function ProfileCards() {
 
         tags: ['Frontend', 'React', 'JavaScript'],
         rating: 82,
+        type: 'junior',
       },
       {
         id: 2,
@@ -52,6 +54,7 @@ export default function ProfileCards() {
         date: '2023-06-22',
         tags: ['Backend', 'AWS', 'Algorithms'],
         rating: 85,
+        type: 'mid',
       },
       {
         id: 3,
@@ -61,6 +64,7 @@ export default function ProfileCards() {
         date: '2023-07-10',
         tags: ['Fullstack', 'React', '.NET'],
         rating: 78,
+        type: 'senior',
       },
       {
         id: 4,
@@ -70,6 +74,7 @@ export default function ProfileCards() {
         date: '2023-08-05',
         tags: ['System Design', 'Scalability'],
         rating: 89,
+        type: 'senior',
       },
       {
         id: 5,
@@ -79,6 +84,7 @@ export default function ProfileCards() {
         date: '2023-09-12',
         tags: ['UI', 'Frontend', 'Performance'],
         rating: 72,
+        type: 'junior',
       },
       {
         id: 6,
@@ -88,6 +94,7 @@ export default function ProfileCards() {
         date: '2023-10-08',
         tags: ['Backend', 'Distributed Systems'],
         rating: 81,
+        type: 'mid',
       },
     ],
     []
@@ -140,7 +147,7 @@ export default function ProfileCards() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {filteredInterviews.map((interview) => (
-          <Card key={interview.id}>
+          <Card key={interview.id} className="relative">
             <CardHeader>
               <CardTitle className="flex flex-row items-center gap-2 font-normal text-muted-foreground">
                 <div className="h-8 w-8 flex items-center justify-center bg-primary text-primary-foreground rounded-full">
@@ -176,6 +183,9 @@ export default function ProfileCards() {
                 View
               </Button>
             </CardFooter>
+            <div className="absolute -top-0.5 right-0">
+              <RoleBadge type={interview.type as 'junior' | 'mid' | 'senior'} />
+            </div>
           </Card>
         ))}
       </div>
