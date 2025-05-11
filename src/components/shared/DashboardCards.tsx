@@ -46,7 +46,17 @@ export default function DashboardCards() {
     setOpen(false);
   };
 
-  const interviews = useMemo(
+  type Interview = {
+    id: number;
+    title: string;
+    description: string;
+    date: string;
+    tags: string[];
+    rating?: number;
+    type: 'junior' | 'mid' | 'senior';
+  };
+
+  const interviews: Interview[] = useMemo(
     () => [
       {
         id: 1,
@@ -252,7 +262,7 @@ export default function DashboardCards() {
               </Button>
             </CardFooter>
             <div className="absolute -top-0.5 right-0">
-              <RoleBadge type={interview.type as 'junior' | 'mid' | 'senior'} />
+              <RoleBadge type={interview.type} />
             </div>
           </Card>
         ))}

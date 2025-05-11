@@ -70,10 +70,12 @@ export default function InterviewDialog({
               <p>{interview.date}</p>
             </div>
 
-            <div className="flex flex-row items-center gap-2">
-              <StarIcon className="h-4 w-4 text-yellow-400 fill-yellow-400" />
-              <p>{interview.rating}%</p>
-            </div>
+            {interview.rating && (
+              <div className="flex flex-row items-center gap-2">
+                <StarIcon className="h-4 w-4 text-yellow-400 fill-yellow-400" />
+                <p>{interview.rating}%</p>
+              </div>
+            )}
           </div>
           <div className="flex flex-row items-center gap-2 text-sm text-muted-foreground">
             <UsersIcon className="h-4 w-4 text-muted-foreground" />
