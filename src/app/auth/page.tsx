@@ -39,7 +39,7 @@ export default function AuthPage() {
     }
 
     if (result?.success) {
-      router.push('/dashboard');
+      router.push('/explore');
     }
   };
 

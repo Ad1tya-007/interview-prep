@@ -126,7 +126,7 @@ export default function ProfileCards() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6 text-muted-foreground">
+      <h1 className="text-2xl font-bold tracking-tight text-muted-foreground mb-6">
         Your Interviews
       </h1>
 
@@ -145,7 +145,7 @@ export default function ProfileCards() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
         {filteredInterviews.map((interview) => (
           <Card key={interview.id} className="relative">
             <CardHeader>

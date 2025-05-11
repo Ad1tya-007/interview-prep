@@ -27,7 +27,7 @@ import { useState, useMemo } from 'react';
 import InterviewDialog from './InterviewDialog';
 import RoleBadge from './RoleBadge';
 
-export default function DashboardCards() {
+export default function ExploreCards() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [showAllTags, setShowAllTags] = useState(false);
@@ -46,7 +46,17 @@ export default function DashboardCards() {
     setOpen(false);
   };
 
-  const interviews = useMemo(
+  type Interview = {
+    id: number;
+    title: string;
+    description: string;
+    date: string;
+    tags: string[];
+    rating?: number;
+    type: 'junior' | 'mid' | 'senior';
+  };
+
+  const interviews: Interview[] = useMemo(
     () => [
       {
         id: 1,
@@ -212,7 +222,7 @@ export default function DashboardCards() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
         {filteredInterviews.map((interview) => (
           <Card key={interview.id} className="relative">
             <CardHeader>
@@ -252,7 +262,7 @@ export default function DashboardCards() {
               </Button>
             </CardFooter>
             <div className="absolute -top-0.5 right-0">
-              <RoleBadge type={interview.type as 'junior' | 'mid' | 'senior'} />
+              <RoleBadge type={interview.type} />
             </div>
           </Card>
         ))}

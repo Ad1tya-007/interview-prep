@@ -21,8 +21,13 @@ const roleDetails = {
   },
 };
 
-const RoleBadge = ({ type }: { type: 'senior' | 'mid' | 'junior' }) => {
-  const { bg, text, dot, label } = roleDetails[type];
+interface RoleBadgeProps {
+  type: string;
+}
+
+const RoleBadge = ({ type }: RoleBadgeProps) => {
+  const { bg, text, dot, label } =
+    roleDetails[type as keyof typeof roleDetails];
 
   return (
     <Badge className={`${bg} ${text} shadow-none rounded-full gap-2`}>

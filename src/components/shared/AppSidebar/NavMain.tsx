@@ -30,7 +30,7 @@ type LowerNavItem = {
 const upperItems: UpperNavItem[] = [
   { title: 'Explore', url: '/explore', icon: Compass },
   { title: 'Your Interviews', url: '/interviews', icon: Star },
-  { title: 'Reports', url: '#', icon: NotepadText },
+  { title: 'Reports', url: '/reports', icon: NotepadText },
 ];
 
 const lowerItems: LowerNavItem[] = [

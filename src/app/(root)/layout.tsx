@@ -1,13 +1,7 @@
-import type { Metadata } from 'next';
 import { SidebarProvider } from '@/components/ui';
 import { AppSidebar, AppSidebarTrigger } from '@/components/shared';
 
-export const metadata: Metadata = {
-  title: 'Dashboard',
-  description: 'Dashboard',
-};
-
-export default function DashboardLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;

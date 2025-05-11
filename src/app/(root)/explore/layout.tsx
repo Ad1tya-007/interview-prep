@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Authenticate',
-  description: 'Authenticate',
+  title: 'Explore',
+  description: 'Explore',
 };
 
 export default function DashboardLayout({
@@ -10,5 +10,5 @@ export default function DashboardLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <div className="flex h-screen w-screen">{children}</div>;
+  return <div>{children}</div>;
 }
