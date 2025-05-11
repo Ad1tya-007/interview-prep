@@ -28,10 +28,11 @@ import {
 import { DataTableFilter } from './data-table-filter';
 import { DataTableViewOptions } from './data-table-view-options';
 import { DataTablePagination } from './data-table-pagination';
-import { StarIcon } from 'lucide-react';
-import { EyeIcon } from 'lucide-react';
+import { DownloadIcon, StarIcon } from 'lucide-react';
 import { DataTableColumnHeader } from './data-table-column-header';
 import RoleBadge from '../RoleBadge';
+import DeleteButton from './DeleteButton';
+import RepeatButton from './RepeatButton';
 
 interface DataTableProps<TData> {
   data: TData[];
@@ -93,8 +94,10 @@ const columns: ColumnDef<any>[] = [
     cell: () => {
       return (
         <div className="flex items-center gap-2">
+          <RepeatButton />
+          <DeleteButton />
           <Button variant="outline" size="sm">
-            <EyeIcon className="w-4 h-4" />
+            <DownloadIcon className="w-3 h-3" />
           </Button>
         </div>
       );
