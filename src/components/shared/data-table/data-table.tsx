@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { useState } from 'react';
@@ -21,24 +22,95 @@ import {
   TableHead,
   TableHeader,
   TableRow,
+  Button,
 } from '@/components/ui';
 
 import { DataTableFilter } from './data-table-filter';
 import { DataTableViewOptions } from './data-table-view-options';
+import { DataTablePagination } from './data-table-pagination';
+import { StarIcon } from 'lucide-react';
+import { EyeIcon } from 'lucide-react';
+import { DataTableColumnHeader } from './data-table-column-header';
+import RoleBadge from '../RoleBadge';
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
+interface DataTableProps<TData> {
   data: TData[];
 }
+// Column definitions for the data table
+const columns: ColumnDef<any>[] = [
+  {
+    accessorKey: 'title',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Title" />
+    ),
+  },
 
-export function DataTable<TData, TValue>({
-  columns,
-  data,
-}: DataTableProps<TData, TValue>) {
+  {
+    accessorKey: 'description',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Description" />
+    ),
+    cell: ({ row }) => {
+      const description: string = row.getValue('description');
+
+      return (
+        <div className="max-w-[500px] truncate" title={description}>
+          {description}
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: 'role',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Role" />
+    ),
+    cell: ({ row }) => {
+      const role: string = row.getValue('role');
+
+      return <RoleBadge type={role} />;
+    },
+  },
+  {
+    accessorKey: 'rating',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Rating" />
+    ),
+    cell: ({ row }) => {
+      const rating = parseInt(row.getValue('rating'));
+
+      return (
+        <div className="flex items-center gap-2">
+          <StarIcon className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+          <span className="font-medium">{rating} %</span>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: 'actions',
+    header: () => <div>Actions</div>,
+    cell: () => {
+      return (
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm">
+            <EyeIcon className="w-4 h-4" />
+          </Button>
+        </div>
+      );
+    },
+  },
+];
+
+export function DataTable<TData>({ data }: DataTableProps<TData>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [globalFilter, setGlobalFilter] = useState<string>('');
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 10,
+  });
 
   const table = useReactTable({
     data,
@@ -48,6 +120,7 @@ export function DataTable<TData, TValue>({
       columnFilters,
       columnVisibility,
       globalFilter,
+      pagination,
     },
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -57,14 +130,19 @@ export function DataTable<TData, TValue>({
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onGlobalFilterChange: setGlobalFilter,
+    onPaginationChange: setPagination,
   });
 
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <DataTableFilter table={table} />
-        <DataTableViewOptions table={table} />
+        <div className="flex items-center gap-2">
+          <DataTableFilter table={table} />
+          <DataTableViewOptions table={table} />
+        </div>
+        <DataTablePagination table={table} />
       </div>
+
       <div className="rounded-md border">
         <Table>
           <TableHeader>

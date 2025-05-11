@@ -1,22 +1,6 @@
-'use client';
+import { DataTable } from '@/components/shared';
 
-import { ColumnDef } from '@tanstack/react-table';
-
-import { DataTable, DataTableColumnHeader } from '@/components/shared';
-import { EyeIcon, StarIcon } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import RoleBadge from '@/components/shared/RoleBadge';
-
-type Interview = {
-  id: number;
-  title: string;
-  rating: number;
-  description: string;
-  role: string;
-};
-
-// Sample data for the table
-const interviews: Interview[] = [
+const interviews = [
   {
     id: 1,
     title: 'Senior React Developer',
@@ -179,77 +163,17 @@ const interviews: Interview[] = [
   },
 ];
 
-// Column definitions for the data table
-const columns: ColumnDef<Interview>[] = [
-  {
-    accessorKey: 'title',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Title" />
-    ),
-  },
-
-  {
-    accessorKey: 'description',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Description" />
-    ),
-    cell: ({ row }) => {
-      const description: string = row.getValue('description');
-
-      return (
-        <div className="max-w-[500px] truncate" title={description}>
-          {description}
-        </div>
-      );
-    },
-  },
-  {
-    accessorKey: 'role',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Role" />
-    ),
-    cell: ({ row }) => {
-      const role: string = row.getValue('role');
-
-      return <RoleBadge type={role} />;
-    },
-  },
-  {
-    accessorKey: 'rating',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Rating" />
-    ),
-    cell: ({ row }) => {
-      const rating = parseInt(row.getValue('rating'));
-
-      return (
-        <div className="flex items-center gap-2">
-          <StarIcon className="w-4 h-4 text-yellow-400 fill-yellow-400" />
-          <span className="font-medium">{rating} %</span>
-        </div>
-      );
-    },
-  },
-  {
-    accessorKey: 'actions',
-    header: () => <div>Actions</div>,
-    cell: () => {
-      return (
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm">
-            <EyeIcon className="w-4 h-4" />
-          </Button>
-        </div>
-      );
-    },
-  },
-];
-
 export default function ReportsPage() {
   return (
-    <div className="container mx-auto py-10">
-      <h1 className="text-3xl font-bold tracking-tight mb-6">Reports</h1>
-      <DataTable columns={columns} data={interviews} />
+    <div className="container mx-auto">
+      <div className="mb-6">
+        <h1 className="text-3xl font-bold tracking-tight">Reports</h1>
+        <p className="text-muted-foreground mt-2">
+          View and analyze all interview reports. Use the pagination to navigate
+          between pages and adjust how many interviews you see at once.
+        </p>
+      </div>
+      <DataTable data={interviews} />
     </div>
   );
 }
