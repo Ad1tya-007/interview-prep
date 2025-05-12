@@ -10,5 +10,5 @@ export default function SupportLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <div>{children}</div>;
+  return <div className="px-6 py-1">{children}</div>;
 }
