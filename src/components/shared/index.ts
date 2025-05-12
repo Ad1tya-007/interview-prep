@@ -4,4 +4,5 @@ export { default as ExploreCards } from './ExploreCards';
 export { default as Banner } from './Banner';
 export { default as ProfileCards } from './ProfileCards';
 export { default as UserProfile } from './UserProfile';
-export * from './data-table'
+export * from './data-table';
+export { default as ContactForm } from './ContactForm';

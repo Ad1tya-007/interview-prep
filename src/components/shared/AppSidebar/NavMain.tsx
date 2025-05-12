@@ -16,26 +16,21 @@ import {
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
-type UpperNavItem = {
+type NavItem = {
   title: string;
   url: string;
   icon: LucideIcon;
 };
 
-type LowerNavItem = {
-  title: string;
-  icon: LucideIcon;
-};
-
-const upperItems: UpperNavItem[] = [
+const upperItems: NavItem[] = [
   { title: 'Explore', url: '/explore', icon: Compass },
   { title: 'Your Interviews', url: '/interviews', icon: Star },
   { title: 'Reports', url: '/reports', icon: NotepadText },
 ];
 
-const lowerItems: LowerNavItem[] = [
-  { title: 'Support', icon: LifeBuoy },
-  { title: 'Feedback', icon: Send },
+const lowerItems: NavItem[] = [
+  { title: 'Support', url: '/support', icon: LifeBuoy },
+  { title: 'Feedback', url: '/feedback', icon: Send },
 ];
 
 export function NavMain() {
@@ -60,7 +55,12 @@ export function NavMain() {
       <SidebarMenu>
         {lowerItems.map((item) => (
           <SidebarMenuItem key={item.title}>
-            <SidebarMenuButton tooltip={item.title}>
+            <SidebarMenuButton
+              tooltip={item.title}
+              onClick={() => {
+                router.push(item.url);
+              }}
+              className="hover:cursor-pointer">
               <item.icon />
               <span>{item.title}</span>
             </SidebarMenuButton>
