@@ -44,3 +44,30 @@ export async function logout() {
   return { success: true }
 } 
 
+export async function signInWithGoogle() {
+  const supabase = await createClient()
+
+  try {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `http://localhost:3000/auth/callback`,
+        skipBrowserRedirect: true // This prevents automatic redirect
+      },
+    })
+
+    if (error) {
+      
+      return { error: error.message }
+    }
+
+    if (data?.url) {
+      return { success: true, url: data.url }
+    } else {
+      return { error: 'Failed to generate authentication URL' }
+    }
+  } catch (err) {
+    return { error: err }
+  }
+}
+
