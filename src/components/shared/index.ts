@@ -6,3 +6,4 @@ export { default as ProfileCards } from './ProfileCards';
 export { default as UserProfile } from './UserProfile';
 export * from './data-table';
 export { default as ContactForm } from './ContactForm';
+export { default as FeedbackForm } from './FeedbackForm';
