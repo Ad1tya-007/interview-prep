@@ -1,6 +1,7 @@
 'use server'
 
 import { createClient } from '@supabase/server'
+import { User } from '@supabase/supabase-js'
 
 export async function sendOtp(email: string) {
   const supabase = await createClient()
@@ -57,7 +58,6 @@ export async function signInWithGoogle() {
     })
 
     if (error) {
-      
       return { error: error.message }
     }
 
@@ -69,5 +69,28 @@ export async function signInWithGoogle() {
   } catch (err) {
     return { error: err }
   }
+}
+
+export async function ensureUserExists(user: User) {
+  const supabase = await createClient()
+
+  const { data: existingUser } = await supabase.from('users').select('*').eq('user_id', user.id).single();
+
+  if (existingUser) {
+    return { user: existingUser, success: true }
+  }
+
+  const { data: newUser, error } = await supabase.from('users').insert({
+    user_id: user.id,
+    email: user.email,
+    name: user.user_metadata.full_name,
+    avatar_url: user.user_metadata.avatar_url,
+  })
+
+  if (error) {
+    return { error: error.message }
+  }
+
+  return { user: newUser, success: true }
 }
 

@@ -10,7 +10,7 @@ import {
 import { User, AuthChangeEvent, Session } from '@supabase/supabase-js';
 import { createClient } from '@supabase/client';
 import { usePathname, useRouter } from 'next/navigation';
-import { logout as serverLogout } from '@/app/auth/actions';
+import { logout as serverLogout, ensureUserExists } from '@/app/auth/actions';
 
 type AuthContextType = {
   user: User | null;
@@ -29,14 +29,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Use createClient which is already a singleton with caching
   const supabase = createClient();
 
+  // Function to handle user authentication and ensure user exists in the database
+  const handleUserAuthentication = async (authUser: User | null) => {
+    if (authUser) {
+      // Ensure user exists in the database
+      await ensureUserExists(authUser);
+    }
+    setUser(authUser);
+    setIsLoading(false);
+  };
+
   useEffect(() => {
     const fetchUser = async () => {
       setIsLoading(true);
       const {
         data: { user },
       } = await supabase.auth.getUser();
-      setUser(user);
-      setIsLoading(false);
+
+      if (user) {
+        await handleUserAuthentication(user);
+      } else {
+        setUser(null);
+        setIsLoading(false);
+      }
     };
 
     fetchUser();
@@ -44,10 +59,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(
-      (event: AuthChangeEvent, session: Session | null) => {
+      async (event: AuthChangeEvent, session: Session | null) => {
         const newUser = session?.user ?? null;
-        setUser(newUser);
-        setIsLoading(false);
+
+        if (newUser && (event === 'SIGNED_IN' || event === 'USER_UPDATED')) {
+          await handleUserAuthentication(newUser);
+        } else {
+          setUser(newUser);
+          setIsLoading(false);
+        }
 
         // Handle immediate redirects based on auth events
         if (event === 'SIGNED_IN' && pathname === '/auth') {
