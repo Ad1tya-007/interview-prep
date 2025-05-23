@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { useState } from 'react';
-import { sendOtp, verifyOtp } from './actions';
+import { sendOtp, signInWithGoogle, verifyOtp } from './actions';
 import { useRouter } from 'next/navigation';
 
 export default function AuthPage() {
@@ -40,6 +40,22 @@ export default function AuthPage() {
 
     if (result?.success) {
       router.push('/explore');
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    const result = await signInWithGoogle();
+
+    if (result?.error) {
+      setError(result.error as string);
+      return;
+    }
+
+    // If we have a URL, redirect the browser to it
+    if (result?.url) {
+      window.location.href = result.url;
+    } else {
+      setError('Authentication failed. No redirect URL was provided.');
     }
   };
 
@@ -96,7 +112,10 @@ export default function AuthPage() {
                 <Separator className="flex-1" />
               </div>
 
-              <Button variant="outline" className="w-full">
+              <Button
+                variant="outline"
+                className="w-full"
+                onClick={handleGoogleSignIn}>
                 <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
                   <path
                     d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
