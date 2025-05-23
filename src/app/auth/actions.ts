@@ -30,7 +30,18 @@ export async function verifyOtp(email: string, token: string) {
     return { error: error.message }
   }
 
-  return { success: true, user: data.user }
+  if (!data.user) {
+    return { error: 'No user data returned' }
+  }
+
+  // Ensure user exists in our database
+  const { user: dbUser, error: dbError } = await ensureUserExists(data.user)
+  
+  if (dbError) {
+    return { error: dbError }
+  }
+
+  return { success: true, user: data.user, dbUser }
 }
 
 export async function logout() {
@@ -83,7 +94,7 @@ export async function ensureUserExists(user: User) {
   const { data: newUser, error } = await supabase.from('users').insert({
     user_id: user.id,
     email: user.email,
-    name: user.user_metadata.full_name,
+    full_name: user.user_metadata.full_name,
     avatar_url: user.user_metadata.avatar_url,
   })
 

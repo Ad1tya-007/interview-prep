@@ -10,7 +10,7 @@ import {
 import { User, AuthChangeEvent, Session } from '@supabase/supabase-js';
 import { createClient } from '@supabase/client';
 import { usePathname, useRouter } from 'next/navigation';
-import { logout as serverLogout, ensureUserExists } from '@/app/auth/actions';
+import { logout as serverLogout } from '@/app/auth/actions';
 
 type AuthContextType = {
   user: User | null;
@@ -31,10 +31,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Function to handle user authentication and ensure user exists in the database
   const handleUserAuthentication = async (authUser: User | null) => {
-    if (authUser) {
-      // Ensure user exists in the database
-      await ensureUserExists(authUser);
-    }
     setUser(authUser);
     setIsLoading(false);
   };
