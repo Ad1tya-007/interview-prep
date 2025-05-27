@@ -1,11 +1,11 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Interviews',
-  description: 'Interviews',
+  title: 'Create Interview',
+  description: 'Create Interview',
 };
 
-export default function InterviewsLayout({
+export default function CreateInterviewLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;

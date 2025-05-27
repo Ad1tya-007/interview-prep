@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   description: 'Explore',
 };
 
-export default function DashboardLayout({
+export default function ExploreLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
