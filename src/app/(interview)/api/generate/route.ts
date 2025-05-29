@@ -1,11 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
-import OpenAI from 'openai'
 import { createClient } from '@supabase/server'
 import { generateInterviewQuestionsPrompt } from '@/lib/prompts'
-
-const openai = new OpenAI({
-  apiKey: process.env.NEXT_PUBLIC_OPENAI_KEY,
-})
+import { openai } from '@/lib/openai'
 
 export async function POST(req: NextRequest) {
   try {
