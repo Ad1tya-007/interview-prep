@@ -1,14 +1,14 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Reports',
-  description: 'Reports',
+  title: 'Call Interview',
+  description: 'Call Interview',
 };
 
-export default function ReportsLayout({
+export default function CallInterviewLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <div className="px-6 py-1">{children}</div>;
+  return <div>{children}</div>;
 }

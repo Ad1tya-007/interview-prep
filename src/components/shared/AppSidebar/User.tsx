@@ -40,11 +40,15 @@ export function User() {
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground">
               <Avatar className="h-8 w-8 rounded-lg">
                 <AvatarImage
-                  src={user?.user_metadata?.avatar_url}
+                  src={
+                    user?.user_metadata?.picture ||
+                    user?.user_metadata?.avatar_url
+                  }
                   alt={user?.email}
+                  referrerPolicy="no-referrer"
                 />
                 <AvatarFallback className="rounded-lg">
-                  {user?.email?.split('')[0]}
+                  {user?.email?.split('')[0].toUpperCase()}
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
@@ -65,8 +69,12 @@ export function User() {
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
                   <AvatarImage
-                    src={user?.user_metadata?.avatar_url}
+                    src={
+                      user?.user_metadata?.picture ||
+                      user?.user_metadata?.avatar_url
+                    }
                     alt={user?.email}
+                    referrerPolicy="no-referrer"
                   />
                   <AvatarFallback className="rounded-lg">
                     {user?.email?.split('')[0]}
