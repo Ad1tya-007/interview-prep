@@ -4,8 +4,8 @@ import { createClient } from '@supabase/server'
 import { generateInterviewQuestionsPrompt } from '@/lib/prompts'
 
 const openai = new OpenAI({
-      apiKey: process.env.NEXT_PUBLIC_OPENAI_KEY
-    })
+  apiKey: process.env.NEXT_PUBLIC_OPENAI_KEY,
+})
 
 export async function POST(req: NextRequest) {
   try {
