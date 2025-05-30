@@ -96,21 +96,141 @@ export default function Interview() {
   }, [messages, callStatus, router]);
 
   const handleCall = async () => {
-    setCallStatus(CallStatus.CONNECTING);
+    try {
+      console.log('=== STARTING VAPI CALL ===');
 
-    await vapi.start(
-      undefined,
-      {
+      // Check environment variables
+      console.log(
+        'Vapi token exists:',
+        !!process.env.NEXT_PUBLIC_VAPI_WEB_TOKEN
+      );
+      console.log(
+        'Vapi token length:',
+        process.env.NEXT_PUBLIC_VAPI_WEB_TOKEN?.length
+      );
+
+      console.log('User:', user);
+      console.log('UserId:', userId);
+      console.log('User metadata:', user?.user_metadata);
+
+      if (!user) {
+        console.error('No user found');
+        return;
+      }
+
+      if (!userId) {
+        console.error('No userId found');
+        return;
+      }
+
+      // Validate generator
+      if (!generator) {
+        console.error('Generator is undefined');
+        return;
+      }
+
+      if (!generator.nodes || !generator.edges) {
+        console.error('Generator is missing nodes or edges');
+        return;
+      }
+
+      // Validate Vapi instance
+      if (!vapi) {
+        console.error('Vapi instance is undefined');
+        return;
+      }
+
+      console.log('Generator nodes count:', generator.nodes.length);
+      console.log('Generator edges count:', generator.edges.length);
+
+      setCallStatus(CallStatus.CONNECTING);
+
+      // Test with minimal config first
+      console.log('Testing with minimal Vapi configuration...');
+
+      const vapiConfig = {
         variableValues: {
-          name: user?.user_metadata.name.split(' ')[0],
+          name: user?.user_metadata.name?.split(' ')?.[0] || 'User',
           userid: userId,
         },
         clientMessages: ['transcript'] as any,
         serverMessages: [] as any,
-      },
-      undefined,
-      generator as any
-    );
+      };
+
+      console.log('Vapi config:', vapiConfig);
+      console.log('Generator name:', generator.name);
+
+      // Let's try with a minimal workflow first to isolate the issue
+      console.log('Using minimal workflow for testing...');
+
+      console.log('=== VAPI.START PARAMETERS ===');
+      console.log('1. assistantId:', undefined);
+      console.log('2. vapiConfig:', JSON.stringify(vapiConfig, null, 2));
+      console.log('3. phoneNumberId:', undefined);
+      console.log('4. workflow:', JSON.stringify(generator, null, 2));
+
+      // Try the call
+      const result = await vapi.start(
+        undefined, // assistantId
+        vapiConfig, // assistant config
+        undefined, // phoneNumberId
+        generator as any // Use original generator workflow
+      );
+
+      console.log('Vapi call started successfully');
+      console.log('Vapi result:', result);
+    } catch (error) {
+      console.error('Error in handleCall:', error);
+      console.error('Error type:', typeof error);
+      console.error('Error constructor:', error?.constructor?.name);
+      console.error(
+        'Error message:',
+        error instanceof Error ? error.message : 'No message'
+      );
+
+      // Check if it's a Vapi API response error
+      if (error && typeof error === 'object' && 'response' in error) {
+        console.error('Vapi API Error Response:', error);
+        const response = (error as any).response;
+        if (response) {
+          console.error('Response status:', response.status);
+          console.error('Response data:', response.data);
+          if (
+            response.data &&
+            response.data.error &&
+            response.data.error.message
+          ) {
+            console.error(
+              'Specific Vapi error messages:',
+              response.data.error.message
+            );
+            alert('Vapi Error: ' + JSON.stringify(response.data.error.message));
+          }
+        }
+      }
+
+      // Check if error has a 'data' property (another common error format)
+      if (error && typeof error === 'object' && 'data' in error) {
+        console.error('Error data:', (error as any).data);
+      }
+
+      console.error('Error details:', JSON.stringify(error, null, 2));
+      console.error(
+        'Error stack:',
+        error instanceof Error ? error.stack : 'No stack trace'
+      );
+
+      // More detailed error inspection
+      if (error && typeof error === 'object') {
+        console.error('Error keys:', Object.keys(error));
+        console.error('Error prototype:', Object.getPrototypeOf(error));
+      }
+
+      setCallStatus(CallStatus.FINISHED);
+
+      // Re-throw for debugging
+      throw error;
+    }
   };
 
   const handleDisconnect = () => {

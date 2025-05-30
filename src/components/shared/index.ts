@@ -8,3 +8,4 @@ export * from './data-table';
 export { default as ContactForm } from './ContactForm';
 export { default as FeedbackForm } from './FeedbackForm';
 export { default as Interview } from './Interview';
+export { default as InterviewCreateDialog } from './InterviewCreateDialog';

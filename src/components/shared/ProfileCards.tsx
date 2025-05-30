@@ -23,6 +23,7 @@ import {
 import { useState, useMemo } from 'react';
 import InterviewDialog from './InterviewDialog';
 import RoleBadge from './RoleBadge';
+import InterviewCreateDialog from './InterviewCreateDialog';
 
 export default function ProfileCards() {
   const { isLoading } = useAuth();
@@ -32,6 +33,8 @@ export default function ProfileCards() {
 
   const [open, setOpen] = useState(false);
   const [selectedInterview, setSelectedInterview] = useState<any>(null);
+  const [isInterviewCreateModalOpen, setIsInterviewCreateModalOpen] =
+    useState(false);
 
   const interviews = useMemo(
     () => [
@@ -131,7 +134,7 @@ export default function ProfileCards() {
       </h1>
 
       {isPro && (
-        <div className="mb-6">
+        <div className="mb-6 flex flex-row justify-between gap-4">
           <div className="relative w-full">
             <Search className="absolute left-3.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
@@ -142,6 +145,9 @@ export default function ProfileCards() {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
+          <Button onClick={() => setIsInterviewCreateModalOpen(true)}>
+            Generate Interview
+          </Button>
         </div>
       )}
 
@@ -194,6 +200,10 @@ export default function ProfileCards() {
         interview={selectedInterview}
         open={open}
         setOpen={handleCloseInterview}
+      />
+      <InterviewCreateDialog
+        open={isInterviewCreateModalOpen}
+        setOpen={setIsInterviewCreateModalOpen}
       />
     </div>
   );

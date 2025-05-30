@@ -34,7 +34,7 @@ export const generator = {
       },
       "prompt": "Ask the user what kind of interview they would like to create. Focus on understanding their intent and capturing any relevant details they provide.",
       "model": {
-        "model": "gpt-4o",
+        "model": "gpt-4",
         "provider": "openai",
         "maxTokens": 1000,
         "temperature": 0.3
@@ -82,73 +82,6 @@ export const generator = {
       }
     },
     {
-      "name": "API Request",
-      "type": "tool",
-      "metadata": {
-        "position": {
-          "x": -142.16087351180352,
-          "y": 691.4728088248361
-        }
-      },
-      "tool": {
-        "url": `${process.env.NEXT_PUBLIC_LINK}/api/generate`,
-        "body": {
-          "type": "object",
-          "required": [
-            "role",
-            "type",
-            "level",
-            "techstack",
-            "amount",
-            "userid"
-          ],
-          "properties": {
-            "role": {
-              "type": "string",
-              "value": "{{ role }}",
-              "description": ""
-            },
-            "type": {
-              "type": "string",
-              "value": "{{ type }}",
-              "description": ""
-            },
-            "level": {
-              "type": "string",
-              "value": "{{ level }}",
-              "description": ""
-            },
-            "amount": {
-              "type": "string",
-              "value": "{{ amount }}",
-              "description": ""
-            },
-            "userid": {
-              "type": "string",
-              "value": "{{userid}}",
-              "description": ""
-            },
-            "techstack": {
-              "type": "string",
-              "value": "{{ techstack }}",
-              "description": ""
-            }
-          }
-        },
-        "name": "generateInterview",
-        "type": "apiRequest",
-        "method": "POST",
-        "function": {
-          "name": "untitled_tool",
-          "parameters": {
-            "type": "object",
-            "required": [],
-            "properties": {}
-          }
-        }
-      }
-    },
-    {
       "name": "hangup_1748584663034",
       "type": "tool",
       "metadata": {
@@ -172,7 +105,7 @@ export const generator = {
       },
       "prompt": "Say that the interview has been generated and thank the user for the call.",
       "model": {
-        "model": "gpt-4o",
+        "model": "gpt-4",
         "provider": "openai",
         "maxTokens": 1000,
         "temperature": 0.7
@@ -197,18 +130,10 @@ export const generator = {
     },
     {
       "from": "Conversation",
-      "to": "API Request",
-      "condition": {
-        "type": "ai",
-        "prompt": "If user has given the role, type, level, techstack and amount of questions."
-      }
-    },
-    {
-      "from": "API Request",
       "to": "node_1748584892250",
       "condition": {
         "type": "ai",
-        "prompt": ""
+        "prompt": "If user has given the role, type, level, techstack and amount of questions."
       }
     },
     {
