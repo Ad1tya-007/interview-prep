@@ -3,21 +3,15 @@ import { createClient } from '@supabase/server'
 import { generateInterviewQuestionsPrompt } from '@/lib/prompts'
 import { openai } from '@/lib/openai'
 
+// Just for testing
+export async function GET() {
+  return NextResponse.json({ message: 'Hello, world!' })
+}
+
 export async function POST(req: NextRequest) {
   try {
-    const supabase = await createClient()
-    
-    // Get current user
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
-    if (authError || !user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
-    }
-
     // Get request body
-    const { type, role, level, techstack, amount} = await req.json();
+    const { type, role, level, techstack, amount, userid } = await req.json();
 
     const prompt = generateInterviewQuestionsPrompt({type, role, level, techstack, amount})
 
@@ -44,11 +38,13 @@ export async function POST(req: NextRequest) {
 
     const questions = Array.isArray(response) ? response : response.questions || [];
 
+    const supabase = await createClient()
+
     // Save to database
     const { error: dbError } = await supabase
       .from('interviews')
       .insert({
-        user_id: user.id,
+        user_id: userid,
         questions: questions,
         type: type,
         role: role,

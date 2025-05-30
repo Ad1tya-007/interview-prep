@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import {
@@ -6,8 +7,13 @@ import {
   CardFooter,
   CardHeader,
 } from '@/components/ui/card';
-import { Bot, User2 } from 'lucide-react';
-import { Button } from '../ui';
+import { Bot } from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage, Button } from '../ui';
+import { useAuth } from '@/context/AuthContext';
+import { useEffect, useState } from 'react';
+import { vapi } from '@/lib/vapi';
+import { useRouter } from 'next/navigation';
+import { generator } from '@/lib/workflow';
 
 enum CallStatus {
   INACTIVE = 'INACTIVE',
@@ -16,23 +22,101 @@ enum CallStatus {
   FINISHED = 'FINISHED',
 }
 
+interface SavedMessage {
+  role: 'user' | 'assistant' | 'system';
+  content: string;
+}
+
 export default function Interview() {
-  const isAgentSpeaking = false;
-  const isUserSpeaking = false;
+  const { user } = useAuth();
+  const userId = user?.id;
+  const router = useRouter();
 
-  const callStatus = CallStatus.CONNECTING as CallStatus;
+  const [isAgentSpeaking, setIsAgentSpeaking] = useState(false);
+  const [isUserSpeaking, setIsUserSpeaking] = useState(false);
+  const [callStatus, setCallStatus] = useState(CallStatus.INACTIVE);
+  const [messages, setMessages] = useState<SavedMessage[]>([]);
+  const [lastMessage, setLastMessage] = useState<string>('');
 
-  const messages: string[] = [
-    'Hello, how are you?',
-    'I am good, thank you!',
-    'What is your name?',
-    'My name is John Doe',
-    'What is your favorite color?',
-    'My favorite color is blue',
-    'What is your favorite food?',
-  ];
+  useEffect(() => {
+    const onCallStart = () => {
+      setCallStatus(CallStatus.ACTIVE);
+    };
 
-  const lastMessage = messages[messages.length - 1] || '';
+    const onCallEnd = () => {
+      setCallStatus(CallStatus.FINISHED);
+    };
+
+    const onMessage = (message: any) => {
+      if (message.type === 'transcript' && message.transcriptType === 'final') {
+        const newMessage = { role: message.role, content: message.transcript };
+        setMessages((prev) => [...prev, newMessage]);
+      }
+    };
+
+    const onSpeechStart = () => {
+      setIsAgentSpeaking(true);
+      setIsUserSpeaking(false);
+    };
+
+    const onSpeechEnd = () => {
+      setIsAgentSpeaking(false);
+      setIsUserSpeaking(true);
+    };
+
+    const onError = (error: Error) => {
+      console.log('Error:', error);
+    };
+
+    vapi.on('call-start', onCallStart);
+    vapi.on('call-end', onCallEnd);
+    vapi.on('message', onMessage);
+    vapi.on('speech-start', onSpeechStart);
+    vapi.on('speech-end', onSpeechEnd);
+    vapi.on('error', onError);
+
+    return () => {
+      vapi.off('call-start', onCallStart);
+      vapi.off('call-end', onCallEnd);
+      vapi.off('message', onMessage);
+      vapi.off('speech-start', onSpeechStart);
+      vapi.off('speech-end', onSpeechEnd);
+      vapi.off('error', onError);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (messages.length > 0) {
+      setLastMessage(messages[messages.length - 1].content);
+    }
+
+    if (callStatus === CallStatus.FINISHED) {
+      router.push('/explore');
+    }
+  }, [messages, callStatus, router]);
+
+  const handleCall = async () => {
+    setCallStatus(CallStatus.CONNECTING);
+
+    await vapi.start(
+      undefined,
+      {
+        variableValues: {
+          name: user?.user_metadata.name.split(' ')[0],
+          userid: userId,
+        },
+        clientMessages: ['transcript'] as any,
+        serverMessages: [] as any,
+      },
+      undefined,
+      generator as any
+    );
+  };
+
+  const handleDisconnect = () => {
+    setCallStatus(CallStatus.FINISHED);
+    vapi.stop();
+  };
 
   return (
     <div>
@@ -62,17 +146,22 @@ export default function Interview() {
             }`}>
             <div className="flex flex-col items-center justify-center h-full space-y-4">
               <CardHeader className="flex items-center justify-center pb-2">
-                <div
-                  className={`rounded-full bg-blue-100 p-3 ${
+                <Avatar
+                  className={`h-18 w-18 ${
                     isUserSpeaking
                       ? 'animate-pulse duration-700 transition-all'
                       : ''
                   }`}>
-                  <User2 className="h-12 w-12 text-blue-600" />
-                </div>
+                  <AvatarImage src={user?.user_metadata.avatar_url} />
+                  <AvatarFallback>
+                    {user?.user_metadata.name.charAt(0)}
+                  </AvatarFallback>
+                </Avatar>
               </CardHeader>
               <CardContent className="text-center">
-                <h3 className="font-semibold text-lg mb-1">You</h3>
+                <h3 className="font-semibold text-lg mb-1">
+                  {user?.user_metadata.name}
+                </h3>
               </CardContent>
             </div>
           </Card>
@@ -87,12 +176,15 @@ export default function Interview() {
       )}
       <div className="w-full justify-center flex mt-4">
         {callStatus === CallStatus.ACTIVE ? (
-          <Button variant="destructive">End</Button>
+          <Button variant="destructive" onClick={handleDisconnect}>
+            End
+          </Button>
         ) : (
           <Button
             className={`bg-green-600 hover:bg-green-600 ${
               callStatus === CallStatus.CONNECTING && 'hidden'
-            }`}>
+            }`}
+            onClick={handleCall}>
             {callStatus === CallStatus.INACTIVE ||
             callStatus === CallStatus.FINISHED
               ? 'Call'
