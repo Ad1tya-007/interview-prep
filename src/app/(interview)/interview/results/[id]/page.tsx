@@ -180,7 +180,7 @@ export default async function InterviewResultsPage({
             <Link href="/explore">Take Another Interview</Link>
           </Button>
           <Button variant="outline" asChild>
-            <Link href="/dashboard">View All Results</Link>
+            <Link href="/reports">View All Results</Link>
           </Button>
         </div>
       </div>

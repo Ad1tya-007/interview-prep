@@ -23,6 +23,7 @@ import {
   TableHeader,
   TableRow,
   Button,
+  Badge,
 } from '@/components/ui';
 
 import { DataTableFilter } from './data-table-filter';
@@ -40,36 +41,66 @@ interface DataTableProps<TData> {
 // Column definitions for the data table
 const columns: ColumnDef<any>[] = [
   {
-    accessorKey: 'title',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Title" />
-    ),
-  },
-
-  {
-    accessorKey: 'description',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Description" />
-    ),
-    cell: ({ row }) => {
-      const description: string = row.getValue('description');
-
-      return (
-        <div className="max-w-[500px] truncate" title={description}>
-          {description}
-        </div>
-      );
-    },
-  },
-  {
     accessorKey: 'role',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Role" />
     ),
     cell: ({ row }) => {
-      const role: string = row.getValue('role');
+      const interview = row.original.interviews;
+      return <div className="capitalize">{interview.role}</div>;
+    },
+  },
+  // {
+  //   accessorKey: 'description',
+  //   header: ({ column }) => (
+  //     <DataTableColumnHeader column={column} title="Description" />
+  //   ),
+  //   cell: ({ row }) => {
+  //     const description: string = row.getValue('description');
 
-      return <RoleBadge level={role} />;
+  //     return (
+  //       <div className="max-w-[500px] truncate" title={description}>
+  //         {description}
+  //       </div>
+  //     );
+  //   },
+  // },
+  {
+    accessorKey: 'level',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Level" />
+    ),
+    cell: ({ row }) => {
+      const interview = row.original.interviews;
+      return <RoleBadge level={interview.level} />;
+    },
+  },
+  {
+    accessorKey: 'type',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Type" />
+    ),
+    cell: ({ row }) => {
+      const interview = row.original.interviews;
+      return <div className="capitalize">{interview.type}</div>;
+    },
+  },
+  {
+    accessorKey: 'techstack',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Tech Stack" />
+    ),
+    cell: ({ row }) => {
+      const interview = row.original.interviews;
+      return (
+        <div className="flex flex-wrap gap-1">
+          {interview.techstack.map((tech: string) => (
+            <Badge key={tech} className="capitalize">
+              {tech}
+            </Badge>
+          ))}
+        </div>
+      );
     },
   },
   {
@@ -77,13 +108,11 @@ const columns: ColumnDef<any>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Rating" />
     ),
-    cell: ({ row }) => {
-      const rating = parseInt(row.getValue('rating'));
-
+    cell: () => {
       return (
         <div className="flex items-center gap-2">
           <StarIcon className="w-4 h-4 text-yellow-400 fill-yellow-400" />
-          <span className="font-medium">{rating} %</span>
+          <span className="font-medium">85 %</span>
         </div>
       );
     },

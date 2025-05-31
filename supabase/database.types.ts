@@ -42,6 +42,38 @@ export type Database = {
         }
         Relationships: []
       }
+      reports: {
+        Row: {
+          created_at: string
+          feedback: Json
+          id: string
+          interview_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          feedback: Json
+          id?: string
+          interview_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          feedback?: Json
+          id?: string
+          interview_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reports_interview_id_fkey"
+            columns: ["interview_id"]
+            isOneToOne: false
+            referencedRelation: "interviews"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       users: {
         Row: {
           avatar_url: string | null
