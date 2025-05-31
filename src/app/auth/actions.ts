@@ -59,13 +59,11 @@ export async function logout() {
 export async function signInWithGoogle() {
   const supabase = await createClient()
 
-  const link = process.env.NEXT_PUBLIC_LINK || 'http://localhost:3000'
-
   try {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${link}/auth/callback`,
+        redirectTo: `${window.location.origin}/auth/callback`,
         skipBrowserRedirect: true // This prevents automatic redirect
       },
     })

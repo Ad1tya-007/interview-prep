@@ -53,7 +53,7 @@ export default function AuthPage() {
 
     // If we have a URL, redirect the browser to it
     if (result?.url) {
-      window.location.href = result.url;
+      router.push(result.url);
     } else {
       setError('Authentication failed. No redirect URL was provided.');
     }
