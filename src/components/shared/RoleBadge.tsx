@@ -1,11 +1,11 @@
 import { Badge } from '@/components/ui/badge';
 
 const roleDetails = {
-  junior: {
+  entry: {
     bg: 'bg-emerald-600/10 dark:bg-emerald-600/20 hover:bg-emerald-600/10',
     text: 'text-emerald-500',
     dot: 'bg-emerald-500',
-    label: 'Junior',
+    label: 'Entry',
   },
   mid: {
     bg: 'bg-amber-600/10 dark:bg-amber-600/20 hover:bg-amber-600/10',
@@ -22,12 +22,12 @@ const roleDetails = {
 };
 
 interface RoleBadgeProps {
-  type: string;
+  level: string;
 }
 
-const RoleBadge = ({ type }: RoleBadgeProps) => {
+const RoleBadge = ({ level }: RoleBadgeProps) => {
   const { bg, text, dot, label } =
-    roleDetails[type as keyof typeof roleDetails];
+    roleDetails[level as keyof typeof roleDetails];
 
   return (
     <Badge className={`${bg} ${text} shadow-none rounded-full gap-2`}>

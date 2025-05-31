@@ -262,7 +262,6 @@ export default function InterviewCreateDialog({
                         <button
                           type="button"
                           onClick={() => {
-                            console.log('Clicked');
                             const newValue = field.value.filter(
                               (t) => t !== tech
                             );

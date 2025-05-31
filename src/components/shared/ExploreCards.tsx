@@ -261,9 +261,9 @@ export default function ExploreCards() {
                 View
               </Button>
             </CardFooter>
-            <div className="absolute -top-0.5 right-0">
+            {/* <div className="absolute -top-0.5 right-0">
               <RoleBadge type={interview.type} />
-            </div>
+            </div> */}
           </Card>
         ))}
       </div>

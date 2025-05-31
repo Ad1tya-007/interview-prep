@@ -21,10 +21,10 @@ export const generator = {
         }
       },
       "prompt": "",
-      "exact": "Hello, {{ name }}! Lets prepare your interview. I will ask you a few questions and generate a perfect interview just for you. Are you ready."
+      "exact": "Hello {{ name }}! Welcome to your interview session. I'll be conducting this interview today. Please take your time with each question and answer as thoroughly as you can. Are you ready to begin?"
     },
     {
-      "name": "Conversation",
+      "name": "interview_conversation",
       "type": "conversation",
       "metadata": {
         "position": {
@@ -32,50 +32,32 @@ export const generator = {
           "y": 322.04135816994057
         }
       },
-      "prompt": "Ask the user what kind of interview they would like to create. Focus on understanding their intent and capturing any relevant details they provide.",
+      "prompt": "You are a professional interviewer conducting an interview. You have been provided with a specific set of interview questions to ask. Ask these questions one by one in a natural, conversational flow: {{ questions }}. Wait for the candidate to fully answer each question before moving to the next. Be encouraging and professional. Ask follow-up questions when appropriate to get more detailed responses. Make the candidate feel comfortable while maintaining a professional interview atmosphere. Make sure to ask all the provided questions during the interview.",
       "model": {
         "model": "gpt-4",
         "provider": "openai",
         "maxTokens": 1000,
         "temperature": 0.3
       },
-      "variableExtractionPlan": {
-        "output": [
-          {
-            "enum": [],
-            "type": "string",
-            "title": "role",
-            "description": "What role would you like to train for?"
-          },
-          {
-            "enum": [],
-            "type": "string",
-            "title": "type",
-            "description": "Are you aiming for a technical, behavioral or mixed interview?"
-          },
-          {
-            "enum": [
-              "entry",
-              "mid",
-              "senior"
-            ],
-            "type": "string",
-            "title": "level",
-            "description": "The job experience level."
-          },
-          {
-            "enum": [],
-            "type": "string",
-            "title": "techstack",
-            "description": "A list of technologies to cover during the job interview."
-          },
-          {
-            "enum": [],
-            "type": "string",
-            "title": "amount",
-            "description": "How many questions would you like me to prepare?"
-          }
-        ]
+      "messagePlan": {
+        "firstMessage": ""
+      }
+    },
+    {
+      "name": "interview_conclusion",
+      "type": "conversation",
+      "metadata": {
+        "position": {
+          "x": -137.6148515576732,
+          "y": 983.8109665168779
+        }
+      },
+      "prompt": "Conclude the interview professionally. Thank the candidate for their time, let them know they did well, and inform them that they will receive feedback shortly. Be encouraging and positive.",
+      "model": {
+        "model": "gpt-4",
+        "provider": "openai",
+        "maxTokens": 1000,
+        "temperature": 0.7
       },
       "messagePlan": {
         "firstMessage": ""
@@ -93,26 +75,6 @@ export const generator = {
       "tool": {
         "type": "endCall"
       }
-    },
-    {
-      "name": "node_1748584892250",
-      "type": "conversation",
-      "metadata": {
-        "position": {
-          "x": -137.6148515576732,
-          "y": 983.8109665168779
-        }
-      },
-      "prompt": "Say that the interview has been generated and thank the user for the call.",
-      "model": {
-        "model": "gpt-4",
-        "provider": "openai",
-        "maxTokens": 1000,
-        "temperature": 0.7
-      },
-      "messagePlan": {
-        "firstMessage": ""
-      }
     }
   ],
   "edges": [
@@ -122,28 +84,28 @@ export const generator = {
     },
     {
       "from": "say",
-      "to": "Conversation",
+      "to": "interview_conversation",
       "condition": {
         "type": "ai",
-        "prompt": "user said yes"
+        "prompt": "user is ready to begin the interview"
       }
     },
     {
-      "from": "Conversation",
-      "to": "node_1748584892250",
+      "from": "interview_conversation",
+      "to": "interview_conclusion",
       "condition": {
         "type": "ai",
-        "prompt": "If user has given the role, type, level, techstack and amount of questions."
+        "prompt": "all interview questions have been asked and answered"
       }
     },
     {
-      "from": "node_1748584892250",
+      "from": "interview_conclusion",
       "to": "hangup_1748584663034",
       "condition": {
         "type": "ai",
-        "prompt": ""
+        "prompt": "interview has been concluded"
       }
     }
   ],
-  "globalPrompt": "You are a friendly and knowledgeable conversation assistant here to guide users through a smooth and helpful experience.\nYour role is to ask the right questions, listen carefully, and provide clear and relevant responses based on what the user shares.\nMaintain a calm, approachable, and professional tone. Adapt naturally to the flow of the conversation, making users feel understood and supported throughout their interaction.\n\nRemember that this is a voice conversation - do not use any special characters."
+  "globalPrompt": "You are a professional interviewer conducting a job interview. Your role is to ask interview questions in a natural, conversational manner and evaluate the candidate's responses. Maintain a professional but friendly tone throughout the interview. Ask questions one at a time, allow the candidate to fully respond, and ask appropriate follow-up questions when needed. Remember that this is a voice conversation - do not use any special characters or formatting."
 }

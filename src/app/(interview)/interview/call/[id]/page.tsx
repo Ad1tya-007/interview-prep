@@ -1,13 +1,20 @@
 import { Interview } from '@/components/shared';
+import { getInterviewById } from './action';
 
-export default function CreateInterviewPage() {
+export default async function CreateInterviewPage({
+  params,
+}: {
+  params: { id: string };
+}) {
+  const { interview } = await getInterviewById(params.id);
+
   return (
     <div className="container mx-auto px-4 sm:px-6 py-4 sm:py-6 md:py-8">
       <h1 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight mb-4 sm:mb-6 md:mb-8 text-center md:text-left">
-        Interview Generation
+        Live Interview
       </h1>
 
-      <Interview />
+      <Interview questions={interview.questions} />
     </div>
   );
 }
