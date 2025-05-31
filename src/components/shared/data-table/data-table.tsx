@@ -69,7 +69,7 @@ const columns: ColumnDef<any>[] = [
     cell: ({ row }) => {
       const role: string = row.getValue('role');
 
-      return <RoleBadge type={role} />;
+      return <RoleBadge level={role} />;
     },
   },
   {

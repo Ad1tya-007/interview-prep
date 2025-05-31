@@ -47,7 +47,7 @@ const interviews = [
     rating: 72,
     description:
       'Shows promise but needs more practical experience. Strong computer science fundamentals but lacks industry experience.',
-    role: 'junior',
+    role: 'entry',
   },
   {
     id: 7,
@@ -103,7 +103,7 @@ const interviews = [
     rating: 72,
     description:
       'Shows promise but needs more practical experience. Strong computer science fundamentals but lacks industry experience.',
-    role: 'junior',
+    role: 'entry',
   },
   {
     id: 14,
@@ -135,7 +135,7 @@ const interviews = [
     rating: 72,
     description:
       'Shows promise but needs more practical experience. Strong computer science fundamentals but lacks industry experience.',
-    role: 'junior',
+    role: 'entry',
   },
   {
     id: 18,
@@ -151,7 +151,7 @@ const interviews = [
     rating: 72,
     description:
       'Shows promise but needs more practical experience. Strong computer science fundamentals but lacks industry experience.',
-    role: 'junior',
+    role: 'entry',
   },
   {
     id: 20,
