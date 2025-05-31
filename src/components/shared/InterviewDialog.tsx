@@ -17,33 +17,19 @@ import {
 } from '@/components/ui';
 import {
   CalendarIcon,
-  UsersIcon,
-  StarIcon,
   EditIcon,
   TrashIcon,
   EllipsisVerticalIcon,
 } from 'lucide-react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import RoleBadge from './RoleBadge';
+import { Interview } from '@supabase/types';
 
 interface InterviewDialogProps {
-  interview: any;
+  interview: Interview;
   open: boolean;
   setOpen: (open: boolean) => void;
 }
-
-const questions: string[] = [
-  'What is your greatest strength and weakness?',
-  'Why do you want to work for our company?',
-  'Where do you see yourself in five years?',
-  'Can you tell me about a time when you overcame a difficult challenge?',
-  'Why are you leaving your current job?',
-  'What do you know about our company culture?',
-  'How do you handle stress and pressure in the workplace?',
-  'Can you describe a project you managed from start to finish?',
-  'How do you prioritize tasks and manage your time?',
-  'Do you have any questions for me?',
-];
 
 export default function InterviewDialog({
   interview,
@@ -51,6 +37,7 @@ export default function InterviewDialog({
   setOpen,
 }: InterviewDialogProps) {
   const pathname = usePathname();
+  const router = useRouter();
 
   const isExplore = pathname === '/explore';
 
@@ -61,43 +48,39 @@ export default function InterviewDialog({
       <DialogContent className="w-[600px] ">
         <DialogHeader className="relative">
           <DialogTitle className="flex flex-row gap-2 items-center">
-            {interview.title}
-            <RoleBadge type={interview.type as 'junior' | 'mid' | 'senior'} />
+            {interview.role}
+            <RoleBadge level={interview.level as 'junior' | 'mid' | 'senior'} />
           </DialogTitle>
           <div className="flex flex-row gap-4 text-sm">
+            <div className="flex flex-row items-center gap-2">
+              <p>{interview.type}</p>
+            </div>
             <div className="flex flex-row items-center gap-2 ">
               <CalendarIcon className="h-4 w-4" />
-              <p>{interview.date}</p>
+              <p>{new Date(interview.created_at).toDateString()}</p>
             </div>
-
-            {interview.rating && (
-              <div className="flex flex-row items-center gap-2">
-                <StarIcon className="h-4 w-4 text-yellow-400 fill-yellow-400" />
-                <p>{interview.rating}%</p>
-              </div>
-            )}
           </div>
-          <div className="flex flex-row items-center gap-2 text-sm text-muted-foreground">
-            <UsersIcon className="h-4 w-4 text-muted-foreground" />
-            <p>100 people have taken this interview</p>
-          </div>
-          <DialogDescription>{interview.description}</DialogDescription>
+          <DialogDescription>Hello</DialogDescription>
           <div className="flex flex-row items-center gap-2 text-sm text-muted-foreground">
             <p>Tags: </p>
             <div className="flex flex-row items-center gap-2">
-              {interview.tags.map((tag: string) => (
-                <Badge key={tag}>{tag}</Badge>
+              {interview.techstack.map((tech: string) => (
+                <Badge key={tech}>{tech}</Badge>
               ))}
             </div>
           </div>
           <div className="space-y-2">
             <p>Questions</p>
             <div className="space-y-2 text-sm text-muted-foreground">
-              {questions.map((question) => (
-                <div key={question}>
-                  <p>Q. {question}</p>
-                </div>
-              ))}
+              {((interview.questions as string[]) || []).map(
+                (question: string, index: number) => (
+                  <div key={question}>
+                    <p>
+                      {index + 1}. {question}
+                    </p>
+                  </div>
+                )
+              )}
             </div>
           </div>
           {!isExplore && (
@@ -123,7 +106,10 @@ export default function InterviewDialog({
           )}
         </DialogHeader>
         <DialogFooter>
-          <Button>Start Interview</Button>
+          <Button
+            onClick={() => router.push(`/interview/call/${interview.id}`)}>
+            Start Interview
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

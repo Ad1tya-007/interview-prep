@@ -25,7 +25,7 @@ import {
 } from 'lucide-react';
 import { useState, useMemo } from 'react';
 import InterviewDialog from './InterviewDialog';
-import RoleBadge from './RoleBadge';
+// import RoleBadge from './RoleBadge';
 
 export default function ExploreCards() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -261,9 +261,9 @@ export default function ExploreCards() {
                 View
               </Button>
             </CardFooter>
-            <div className="absolute -top-0.5 right-0">
+            {/* <div className="absolute -top-0.5 right-0">
               <RoleBadge type={interview.type} />
-            </div>
+            </div> */}
           </Card>
         ))}
       </div>

@@ -23,6 +23,7 @@ import {
   TableHeader,
   TableRow,
   Button,
+  Badge,
 } from '@/components/ui';
 
 import { DataTableFilter } from './data-table-filter';
@@ -33,6 +34,7 @@ import { DataTableColumnHeader } from './data-table-column-header';
 import RoleBadge from '../RoleBadge';
 import DeleteButton from './DeleteButton';
 import RepeatButton from './RepeatButton';
+import { useRouter } from 'next/navigation';
 
 interface DataTableProps<TData> {
   data: TData[];
@@ -40,36 +42,66 @@ interface DataTableProps<TData> {
 // Column definitions for the data table
 const columns: ColumnDef<any>[] = [
   {
-    accessorKey: 'title',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Title" />
-    ),
-  },
-
-  {
-    accessorKey: 'description',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Description" />
-    ),
-    cell: ({ row }) => {
-      const description: string = row.getValue('description');
-
-      return (
-        <div className="max-w-[500px] truncate" title={description}>
-          {description}
-        </div>
-      );
-    },
-  },
-  {
     accessorKey: 'role',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Role" />
     ),
     cell: ({ row }) => {
-      const role: string = row.getValue('role');
+      const interview = row.original.interviews;
+      return <div className="capitalize">{interview.role}</div>;
+    },
+  },
+  // {
+  //   accessorKey: 'description',
+  //   header: ({ column }) => (
+  //     <DataTableColumnHeader column={column} title="Description" />
+  //   ),
+  //   cell: ({ row }) => {
+  //     const description: string = row.getValue('description');
 
-      return <RoleBadge type={role} />;
+  //     return (
+  //       <div className="max-w-[500px] truncate" title={description}>
+  //         {description}
+  //       </div>
+  //     );
+  //   },
+  // },
+  {
+    accessorKey: 'level',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Level" />
+    ),
+    cell: ({ row }) => {
+      const interview = row.original.interviews;
+      return <RoleBadge level={interview.level} />;
+    },
+  },
+  {
+    accessorKey: 'type',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Type" />
+    ),
+    cell: ({ row }) => {
+      const interview = row.original.interviews;
+      return <div className="capitalize">{interview.type}</div>;
+    },
+  },
+  {
+    accessorKey: 'techstack',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Tech Stack" />
+    ),
+    cell: ({ row }) => {
+      const interview = row.original.interviews;
+      return (
+        <div className="flex flex-wrap gap-1">
+          {interview.techstack.map((tech: string) => (
+            <Badge key={tech} className="capitalize">
+              {tech}
+            </Badge>
+          ))}
+        </div>
+      );
     },
   },
   {
@@ -77,13 +109,11 @@ const columns: ColumnDef<any>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Rating" />
     ),
-    cell: ({ row }) => {
-      const rating = parseInt(row.getValue('rating'));
-
+    cell: () => {
       return (
         <div className="flex items-center gap-2">
           <StarIcon className="w-4 h-4 text-yellow-400 fill-yellow-400" />
-          <span className="font-medium">{rating} %</span>
+          <span className="font-medium">85 %</span>
         </div>
       );
     },
@@ -106,6 +136,7 @@ const columns: ColumnDef<any>[] = [
 ];
 
 export function DataTable<TData>({ data }: DataTableProps<TData>) {
+  const router = useRouter();
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -173,7 +204,11 @@ export function DataTable<TData>({ data }: DataTableProps<TData>) {
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}>
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell
+                      key={cell.id}
+                      onClick={() =>
+                        router.push(`/interview/results/${row.original.id}`)
+                      }>
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()
