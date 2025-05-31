@@ -64,6 +64,27 @@ export const generator = {
       }
     },
     {
+      "name": "generate_feedback_api",
+      "type": "tool",
+      "metadata": {
+        "position": {
+          "x": -137.87102753181352,
+          "y": 1100.3621226499376
+        }
+      },
+      "tool": {
+        "type": "apiCall",
+        "method": "POST",
+        "url": `${process.env.NEXT_PUBLIC_LINK}/api/feedback`,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "messages": "{{ conversationHistory }}"
+        }
+      }
+    },
+    {
       "name": "hangup_1748584663034",
       "type": "tool",
       "metadata": {
@@ -100,11 +121,15 @@ export const generator = {
     },
     {
       "from": "interview_conclusion",
-      "to": "hangup_1748584663034",
+      "to": "generate_feedback_api",
       "condition": {
         "type": "ai",
         "prompt": "interview has been concluded"
       }
+    },
+    {
+      "from": "generate_feedback_api",
+      "to": "hangup_1748584663034"
     }
   ],
   "globalPrompt": "You are a professional interviewer conducting a job interview. Your role is to ask interview questions in a natural, conversational manner and evaluate the candidate's responses. Maintain a professional but friendly tone throughout the interview. Ask questions one at a time, allow the candidate to fully respond, and ask appropriate follow-up questions when needed. Remember that this is a voice conversation - do not use any special characters or formatting."
