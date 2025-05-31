@@ -34,6 +34,7 @@ import { DataTableColumnHeader } from './data-table-column-header';
 import RoleBadge from '../RoleBadge';
 import DeleteButton from './DeleteButton';
 import RepeatButton from './RepeatButton';
+import { useRouter } from 'next/navigation';
 
 interface DataTableProps<TData> {
   data: TData[];
@@ -135,6 +136,7 @@ const columns: ColumnDef<any>[] = [
 ];
 
 export function DataTable<TData>({ data }: DataTableProps<TData>) {
+  const router = useRouter();
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -202,7 +204,11 @@ export function DataTable<TData>({ data }: DataTableProps<TData>) {
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}>
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell
+                      key={cell.id}
+                      onClick={() =>
+                        router.push(`/interview/results/${row.original.id}`)
+                      }>
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()
