@@ -4,9 +4,10 @@ import { getInterviewById } from './action';
 export default async function CreateInterviewPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  const { interview } = await getInterviewById(params.id);
+  const { id } = await params;
+  const { interview } = await getInterviewById(id);
 
   return (
     <div className="container mx-auto px-4 sm:px-6 py-4 sm:py-6 md:py-8">
@@ -14,7 +15,7 @@ export default async function CreateInterviewPage({
         Live Interview
       </h1>
 
-      <Interview questions={interview.questions} />
+      <Interview questions={interview.questions} interviewId={id} />
     </div>
   );
 }

@@ -25,7 +25,7 @@ import {
 } from 'lucide-react';
 import { useState, useMemo } from 'react';
 import InterviewDialog from './InterviewDialog';
-import RoleBadge from './RoleBadge';
+// import RoleBadge from './RoleBadge';
 
 export default function ExploreCards() {
   const [searchQuery, setSearchQuery] = useState('');

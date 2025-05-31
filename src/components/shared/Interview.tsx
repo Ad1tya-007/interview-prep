@@ -10,7 +10,7 @@ import {
 import { Bot } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage, Button } from '../ui';
 import { useAuth } from '@/context/AuthContext';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { vapi } from '@/lib/vapi';
 import { useRouter } from 'next/navigation';
 import { generator } from '@/lib/workflow';
@@ -20,10 +20,12 @@ enum CallStatus {
   CONNECTING = 'CONNECTING',
   ACTIVE = 'ACTIVE',
   FINISHED = 'FINISHED',
+  GENERATING_FEEDBACK = 'GENERATING_FEEDBACK',
 }
 
 interface InterviewProps {
   questions: string[];
+  interviewId: string;
 }
 
 interface SavedMessage {
@@ -31,7 +33,7 @@ interface SavedMessage {
   content: string;
 }
 
-export default function Interview({ questions }: InterviewProps) {
+export default function Interview({ questions, interviewId }: InterviewProps) {
   const { user } = useAuth();
   const userId = user?.id;
   const router = useRouter();
@@ -83,15 +85,54 @@ export default function Interview({ questions }: InterviewProps) {
     };
   }, []);
 
+  const generateFeedback = useCallback(async () => {
+    try {
+      setCallStatus(CallStatus.GENERATING_FEEDBACK);
+
+      // Convert messages to conversation history string
+      const conversationHistory = messages
+        .map((msg) => `${msg.role}: ${msg.content}`)
+        .join('\n');
+
+      console.log('Generating feedback for conversation:', conversationHistory);
+
+      // Call our API to generate feedback
+      const response = await fetch(`/api/interviews/${interviewId}/feedback`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          conversationHistory,
+          userId,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to generate feedback');
+      }
+
+      const result = await response.json();
+      console.log('Feedback generated:', result);
+
+      // Redirect to feedback results page
+      router.push(`/interview/results/${result.reportId}`);
+    } catch (error) {
+      console.error('Error generating feedback:', error);
+      // Fallback: redirect to explore page
+      router.push('/explore');
+    }
+  }, [messages, interviewId, userId, router]);
+
   useEffect(() => {
     if (messages.length > 0) {
       setLastMessage(messages[messages.length - 1].content);
     }
 
-    if (callStatus === CallStatus.FINISHED) {
-      router.push('/explore');
+    if (callStatus === CallStatus.FINISHED && messages.length > 0) {
+      generateFeedback();
     }
-  }, [messages, callStatus, router]);
+  }, [messages, callStatus, generateFeedback]);
 
   const handleCall = async () => {
     try {
@@ -120,6 +161,7 @@ export default function Interview({ questions }: InterviewProps) {
 
       await vapi.start(undefined, vapiConfig, undefined, generator as any);
     } catch (error) {
+      console.error('Error in handleCall:', error);
       if (error && typeof error === 'object' && 'response' in error) {
         const response = (error as any).response;
         if (response?.data?.error?.message) {
@@ -134,6 +176,17 @@ export default function Interview({ questions }: InterviewProps) {
   const handleDisconnect = () => {
     setCallStatus(CallStatus.FINISHED);
     vapi.stop();
+  };
+
+  const getStatusText = () => {
+    switch (callStatus) {
+      case CallStatus.CONNECTING:
+        return 'Connecting...';
+      case CallStatus.GENERATING_FEEDBACK:
+        return 'Generating your feedback...';
+      default:
+        return 'Call';
+    }
   };
 
   return (
@@ -200,13 +253,19 @@ export default function Interview({ questions }: InterviewProps) {
         ) : (
           <Button
             className={`bg-green-600 hover:bg-green-600 ${
-              callStatus === CallStatus.CONNECTING && 'hidden'
+              (callStatus === CallStatus.CONNECTING ||
+                callStatus === CallStatus.GENERATING_FEEDBACK) &&
+              'opacity-50 cursor-not-allowed'
             }`}
-            onClick={handleCall}>
+            onClick={handleCall}
+            disabled={
+              callStatus === CallStatus.CONNECTING ||
+              callStatus === CallStatus.GENERATING_FEEDBACK
+            }>
             {callStatus === CallStatus.INACTIVE ||
             callStatus === CallStatus.FINISHED
               ? 'Call'
-              : '...'}
+              : getStatusText()}
           </Button>
         )}
       </div>

@@ -58,6 +58,7 @@ export default function ContactForm() {
   // Submit handler
   function onSubmit(values: ContactFormValues) {
     setIsSubmitted(true);
+    console.log(values);
 
     // Reset form after submission
     setTimeout(() => {
