@@ -7,7 +7,6 @@ import {
   AvatarImage,
   Badge,
   Card,
-  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
@@ -15,10 +14,13 @@ import {
 } from '@/components/ui';
 import { BadgeCheck, EllipsisVertical, Star, User } from 'lucide-react';
 
-export default function UserProfile() {
+interface UserProfileProps {
+  interviewCount: number;
+}
+
+export default function UserProfile({ interviewCount }: UserProfileProps) {
   const { user, isLoading } = useAuth();
   const isPro = true;
-  const interviewCount = 4;
 
   return (
     <Card className="w-full relative">
@@ -45,12 +47,12 @@ export default function UserProfile() {
           )}
         </Avatar>
         <div className="space-y-1">
-          <div className="flex flex-row gap-2 items-end">
+          <div className="flex flex-row gap-2 items-center">
             <CardTitle className="text-2xl font-bold">
               {isLoading ? 'Loading..' : user?.email?.split('@')[0]}
             </CardTitle>
             {!isLoading && (
-              <div className="flex flex-wrap gap-2 mt-1">
+              <div className="flex flex-wrap gap-2">
                 {isPro && (
                   <Badge
                     variant="outline"
@@ -74,42 +76,6 @@ export default function UserProfile() {
           <CardDescription className="text-sm">{user?.email}</CardDescription>
         </div>
       </CardHeader>
-      <CardContent>
-        {isLoading ? (
-          <div className="grid grid-cols-3 gap-4 justify-center items-center">
-            <div className="flex justify-center items-center">
-              <Skeleton className="h-12 w-12" />
-            </div>
-            <div className="flex justify-center items-center">
-              <Skeleton className="h-12 w-12" />
-            </div>
-            <div className="flex justify-center items-center">
-              <Skeleton className="h-12 w-12" />
-            </div>
-          </div>
-        ) : (
-          <div className="grid grid-cols-3 gap-4 text-center">
-            <div className="space-y-1">
-              <p className="text-md md:text-lg lg:text-xl font-bold">5</p>
-              <p className="text-xs text-muted-foreground">
-                Interviews Completed
-              </p>
-            </div>
-            <div className="space-y-1">
-              <p className="text-md md:text-lg lg:text-xl font-bold">8</p>
-              <p className="text-xs text-muted-foreground">Hours Practiced</p>
-            </div>
-            <div className="space-y-1">
-              <p className="text-md md:text-lg lg:text-xl font-bold">
-                76.5 / 100
-              </p>
-              <p className="text-xs text-muted-foreground">
-                Average Interview Rating
-              </p>
-            </div>
-          </div>
-        )}
-      </CardContent>
       <div className="absolute top-0 right-0 p-4 hover:cursor-pointer">
         <EllipsisVertical className="h-5 w-5" />
       </div>

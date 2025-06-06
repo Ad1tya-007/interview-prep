@@ -37,8 +37,6 @@ export default function ProfileCards({ interviews }: ProfileCardsProps) {
   const [isInterviewCreateModalOpen, setIsInterviewCreateModalOpen] =
     useState(false);
 
-  console.log(interviews);
-
   if (isLoading) {
     return (
       <div className="h-[300] flex items-center justify-center">
