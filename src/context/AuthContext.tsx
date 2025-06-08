@@ -79,18 +79,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
   }, [supabase, pathname, router]);
 
+  // Define public routes that don't require authentication
+  const publicRoutes = ['/', '/auth'];
+  const isPublicRoute = publicRoutes.includes(pathname);
+
   // Handle redirects based on auth state and current path
   useEffect(() => {
     if (!isLoading) {
       const isAuthPage = pathname === '/auth';
 
-      if (!user && !isAuthPage) {
+      if (!user && !isPublicRoute) {
+        // Redirect to auth page if trying to access protected route without auth
         router.replace('/auth');
       } else if (user && isAuthPage) {
+        // Redirect authenticated users away from auth page
         router.replace('/explore');
       }
     }
-  }, [user, isLoading, pathname, router]);
+  }, [user, isLoading, pathname, router, isPublicRoute]);
 
   const logout = async () => {
     try {
