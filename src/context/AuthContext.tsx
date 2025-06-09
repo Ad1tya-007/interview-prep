@@ -86,12 +86,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Handle redirects based on auth state and current path
   useEffect(() => {
     if (!isLoading) {
-      const isAuthPage = pathname === '/auth';
-
       if (!user && !isPublicRoute) {
         // Redirect to auth page if trying to access protected route without auth
         router.replace('/auth');
-      } else if (user && isAuthPage) {
+      } else if (user && isPublicRoute) {
         // Redirect authenticated users away from auth page
         router.replace('/explore');
       }

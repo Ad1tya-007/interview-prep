@@ -26,6 +26,7 @@ import {
   ChevronUpIcon,
   ClockIcon,
   Share2Icon,
+  InfoIcon,
 } from 'lucide-react';
 
 interface FeedbackItem {
@@ -104,12 +105,6 @@ function getScoreColor(score: number): string {
   if (score >= 6)
     return 'bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300 border-amber-200 dark:border-amber-800';
   return 'bg-rose-100 text-rose-800 dark:bg-rose-900/50 dark:text-rose-300 border-rose-200 dark:border-rose-800';
-}
-
-function getProgressColor(score: number): string {
-  if (score >= 8) return 'bg-emerald-600 dark:bg-emerald-500';
-  if (score >= 6) return 'bg-amber-600 dark:bg-amber-500';
-  return 'bg-rose-600 dark:bg-rose-500';
 }
 
 function getScoreText(score: number): string {
@@ -195,6 +190,14 @@ export default async function InterviewResultsPage({
     },
   ];
 
+  const improvementAreas = [
+    'Needs work on communication skills',
+    'Needs work on technical knowledge',
+    'Needs work on problem solving',
+    'Needs work on cultural fit',
+    'Needs work on confidence and clarity',
+  ];
+
   const averageScore =
     categories.reduce(
       (sum, category) =>
@@ -251,8 +254,8 @@ export default async function InterviewResultsPage({
           </TabsList>
 
           <TabsContent value="overview" className="space-y-6">
-            <Card className="border-2 border-primary/10">
-              <CardContent className="space-y-8">
+            <Card className="">
+              <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pb-6 border-b">
                   <div className="flex flex-col gap-1.5">
                     <div className="text-sm text-muted-foreground">
@@ -398,7 +401,7 @@ export default async function InterviewResultsPage({
                             </div>
                             <Progress
                               value={(score / 10) * 100}
-                              className={`h-2 ${getProgressColor(score)}`}
+                              className="h-2"
                             />
                           </div>
                         );
@@ -438,7 +441,7 @@ export default async function InterviewResultsPage({
                             </div>
                             <Progress
                               value={(score / 10) * 100}
-                              className={`h-2 ${getProgressColor(score)}`}
+                              className="h-2"
                             />
                           </div>
                         );
@@ -451,31 +454,24 @@ export default async function InterviewResultsPage({
 
           <TabsContent value="detailed" className="space-y-6">
             {/* Detailed Category Analysis */}
-            {categories.map((category) => {
+            {categories.map((category, index) => {
               const feedback = report.feedback[category.key as keyof Feedback];
-              const scoreIndicator = getScoreIndicator(feedback.score);
 
               return (
                 <Card key={category.key} className="overflow-hidden">
                   <CardHeader>
-                    <div className="flex items-start justify-between">
-                      <div className="space-y-1">
+                    <div className="space-y-1">
+                      <div className="flex justify-between items-center">
                         <div className="flex items-center gap-2">
                           <span className="text-2xl">{category.icon}</span>
                           <CardTitle>{category.label}</CardTitle>
                         </div>
-                        <CardDescription>
-                          {category.description}
-                        </CardDescription>
-                      </div>
-                      <div className="flex items-center gap-4">
-                        <scoreIndicator.icon
-                          className={`w-5 h-5 ${scoreIndicator.color}`}
-                        />
                         <Badge className={getScoreColor(feedback.score)}>
                           {feedback.score}/10
                         </Badge>
                       </div>
+
+                      <CardDescription>{category.description}</CardDescription>
                     </div>
                   </CardHeader>
                   <CardContent className="space-y-4">
@@ -490,7 +486,7 @@ export default async function InterviewResultsPage({
                       </div>
                       <Progress
                         value={(feedback.score / 10) * 100}
-                        className={`h-2 ${getProgressColor(feedback.score)}`}
+                        className="h-2"
                       />
                     </div>
                     <div className="space-y-2">
@@ -502,10 +498,20 @@ export default async function InterviewResultsPage({
                       </p>
                     </div>
                   </CardContent>
-                  <CardFooter className="bg-muted/50">
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <AlertTriangleIcon className="w-4 h-4" />
-                      Areas for Improvement
+                  <CardFooter>
+                    <div className="bg-muted/50 w-full px-4 py-3 border-muted-foreground/10 rounded-lg border space-y-2 text-sm text-muted-foreground">
+                      <div className="flex items-center gap-2 font-semibold text-foreground">
+                        <AlertTriangleIcon className="w-4 h-4" />
+                        Areas for Improvement
+                      </div>
+                      <div className="flex flex-col gap-2">
+                        {improvementAreas.slice(0, index + 1).map((area) => (
+                          <div key={area} className="flex items-center gap-2">
+                            <InfoIcon className="w-4 h-4" />
+                            {area}
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </CardFooter>
                 </Card>
