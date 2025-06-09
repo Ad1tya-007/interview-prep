@@ -11,7 +11,6 @@ export default async function CreateInterviewPage({
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header Section */}
       <div className="container mx-auto px-4 sm:px-6 py-4 sm:py-6">
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary">
@@ -28,7 +27,6 @@ export default async function CreateInterviewPage({
         </div>
       </div>
 
-      {/* Main Content */}
       <div className="container mx-auto px-4 sm:px-6 pb-8">
         <div className="bg-card rounded-xl shadow-sm border p-6">
           <Interview questions={interview.questions} interviewId={id} />

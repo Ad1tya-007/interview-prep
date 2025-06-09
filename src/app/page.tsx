@@ -6,14 +6,12 @@ export default function Home() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-background px-4">
       <div className="w-full max-w-3xl mx-auto text-center space-y-8">
-        {/* Logo/Icon */}
         <div className="mb-8">
           <div className="h-16 w-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
             <MessageCircleCode className="h-8 w-8 text-primary" />
           </div>
         </div>
 
-        {/* Main Content */}
         <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-foreground">
           Practice Interviews with AI
         </h1>
@@ -23,7 +21,6 @@ export default function Home() {
           interview skills with our AI-powered practice platform.
         </p>
 
-        {/* Example Bubbles */}
         <div className="space-y-4 my-12">
           <div className="bg-accent/50 p-4 rounded-lg max-w-md mx-auto text-left">
             <p className="text-sm text-muted-foreground">Example question</p>
@@ -40,7 +37,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* CTA Button */}
         <div>
           <Link href="/auth">
             <Button size="lg" className="px-8 py-6 text-lg">
@@ -49,7 +45,6 @@ export default function Home() {
           </Link>
         </div>
 
-        {/* Stats */}
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 pt-12 text-sm text-muted-foreground">
           <div>
             <p className="font-medium text-foreground">10,000+</p>
