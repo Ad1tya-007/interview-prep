@@ -32,6 +32,7 @@ import {
 interface FeedbackItem {
   score: number;
   comments: string;
+  areas_for_improvement: string[];
 }
 
 interface Feedback {
@@ -156,6 +157,7 @@ export default async function InterviewResultsPage({
 }) {
   const { id } = await params;
   const report = await getReport(id);
+  console.log(report);
 
   const categories = [
     {
@@ -188,14 +190,6 @@ export default async function InterviewResultsPage({
       icon: '✨',
       description: 'Self-assurance and clear communication under pressure',
     },
-  ];
-
-  const improvementAreas = [
-    'Needs work on communication skills',
-    'Needs work on technical knowledge',
-    'Needs work on problem solving',
-    'Needs work on cultural fit',
-    'Needs work on confidence and clarity',
   ];
 
   const averageScore =
@@ -454,7 +448,7 @@ export default async function InterviewResultsPage({
 
           <TabsContent value="detailed" className="space-y-6">
             {/* Detailed Category Analysis */}
-            {categories.map((category, index) => {
+            {categories.map((category) => {
               const feedback = report.feedback[category.key as keyof Feedback];
 
               return (
@@ -498,22 +492,24 @@ export default async function InterviewResultsPage({
                       </p>
                     </div>
                   </CardContent>
-                  <CardFooter>
-                    <div className="bg-muted/50 w-full px-4 py-3 border-muted-foreground/10 rounded-lg border space-y-2 text-sm text-muted-foreground">
-                      <div className="flex items-center gap-2 font-semibold text-foreground">
-                        <AlertTriangleIcon className="w-4 h-4" />
-                        Areas for Improvement
+                  {feedback?.areas_for_improvement?.length > 0 && (
+                    <CardFooter>
+                      <div className="bg-muted/50 w-full px-4 py-3 border-muted-foreground/10 rounded-lg border space-y-2 text-sm text-muted-foreground">
+                        <div className="flex items-center gap-2 font-semibold text-foreground">
+                          <AlertTriangleIcon className="w-4 h-4" />
+                          Areas for Improvement
+                        </div>
+                        <div className="flex flex-col gap-2">
+                          {feedback.areas_for_improvement.map((area) => (
+                            <div key={area} className="flex items-center gap-2">
+                              <InfoIcon className="w-4 h-4" />
+                              {area}
+                            </div>
+                          ))}
+                        </div>
                       </div>
-                      <div className="flex flex-col gap-2">
-                        {improvementAreas.slice(0, index + 1).map((area) => (
-                          <div key={area} className="flex items-center gap-2">
-                            <InfoIcon className="w-4 h-4" />
-                            {area}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </CardFooter>
+                    </CardFooter>
+                  )}
                 </Card>
               );
             })}

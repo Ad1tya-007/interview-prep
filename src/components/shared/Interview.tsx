@@ -6,7 +6,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Bot, Mic, MicOff, Phone, PhoneOff } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage, Button } from '../ui';
 import { useAuth } from '@/context/AuthContext';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useRef } from 'react';
 import { vapi } from '@/lib/vapi';
 import { useRouter } from 'next/navigation';
 import { generator } from '@/lib/workflow';
@@ -32,8 +32,10 @@ interface SavedMessage {
 
 export default function Interview({ questions, interviewId }: InterviewProps) {
   const { user } = useAuth();
+  const name = user?.user_metadata.name?.split(' ')?.[0];
   const userId = user?.id;
   const router = useRouter();
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const [isAgentSpeaking, setIsAgentSpeaking] = useState(false);
   const [isUserSpeaking, setIsUserSpeaking] = useState(false);
@@ -150,7 +152,7 @@ export default function Interview({ questions, interviewId }: InterviewProps) {
           if (node.name === 'interview_conversation') {
             return {
               ...node,
-              prompt: `You are a professional interviewer conducting an interview. You MUST ask the following specific questions and ONLY these questions:
+              prompt: `You are a professional interviewer conducting an interview. The name of the candidate is ${name}. You MUST ask the following specific questions and ONLY these questions:
 
 ${formattedQuestions}
 
@@ -213,6 +215,11 @@ Start with the first question from the list above.`,
         return 'Call';
     }
   };
+
+  // Add useEffect for auto-scrolling
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
 
   return (
     <div className="flex flex-col lg:flex-row gap-8">
@@ -400,6 +407,7 @@ Start with the first question from the list above.`,
                     </div>
                   </div>
                 ))}
+                <div ref={messagesEndRef} />
               </div>
             </ScrollArea>
           </div>
