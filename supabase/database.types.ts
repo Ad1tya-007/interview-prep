@@ -16,7 +16,7 @@ export type Database = {
           level: string
           questions: Json
           role: string
-          techstack: string[]
+          tags: string[]
           type: string
           user_id: string
         }
@@ -26,7 +26,7 @@ export type Database = {
           level: string
           questions: Json
           role: string
-          techstack: string[]
+          tags: string[]
           type: string
           user_id: string
         }
@@ -36,7 +36,7 @@ export type Database = {
           level?: string
           questions?: Json
           role?: string
-          techstack?: string[]
+          tags?: string[]
           type?: string
           user_id?: string
         }

@@ -106,8 +106,8 @@ export default function ProfileCards({ interviews }: ProfileCardsProps) {
             </CardHeader>
             <CardContent className="text-[15px] text-muted-foreground h-[150px] overflow-hidden">
               <div className="flex flex-wrap gap-2">
-                {interview.techstack.map((tech, index) => (
-                  <Badge key={index}>{tech}</Badge>
+                {interview.tags.map((tag) => (
+                  <Badge key={tag}>{tag}</Badge>
                 ))}
               </div>
             </CardContent>
@@ -120,9 +120,7 @@ export default function ProfileCards({ interviews }: ProfileCardsProps) {
               </Button>
             </CardFooter>
             <div className="absolute -top-0.5 right-0">
-              <RoleBadge
-                level={interview.level as 'entry' | 'mid' | 'senior'}
-              />
+              <Badge>{interview.level}</Badge>
             </div>
           </Card>
         ))}
