@@ -12,6 +12,7 @@ export type Database = {
       interviews: {
         Row: {
           created_at: string
+          description: string
           id: string
           level: string
           questions: Json
@@ -22,6 +23,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          description: string
           id?: string
           level: string
           questions: Json
@@ -32,6 +34,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          description?: string
           id?: string
           level?: string
           questions?: Json

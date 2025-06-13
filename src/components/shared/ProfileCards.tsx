@@ -104,7 +104,10 @@ export default function ProfileCards({ interviews }: ProfileCardsProps) {
                 </div>
               </CardDescription>
             </CardHeader>
-            <CardContent className="text-[15px] text-muted-foreground h-[150px] overflow-hidden">
+            <CardContent className="text-[15px] text-muted-foreground h-[150px] overflow-hidden space-y-2">
+              <p className="text-sm text-muted-foreground line-clamp-4">
+                {interview.description}
+              </p>
               <div className="flex flex-wrap gap-2">
                 {interview.tags.map((tag) => (
                   <Badge key={tag}>{tag}</Badge>
