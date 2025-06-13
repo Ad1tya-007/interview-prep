@@ -59,6 +59,7 @@ export async function POST(req: NextRequest) {
         role: response.role,
         level: response.level,
         tags: response.tags,
+        description: response.description,
       })
       .select()
       .single()
@@ -81,6 +82,7 @@ export async function POST(req: NextRequest) {
         level: response.level,
         tags: response.tags,
         questions: response.questions,
+        description: response.description,
       }
     })
 
