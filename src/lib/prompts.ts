@@ -42,7 +42,7 @@ Return the response in the following JSON format:
 
 Formatting rules:
 1. There are only 3 types of interviews: "Technical", "Behavioral" or "Mixed".
-2. Role should be properly capitalized (e.g., "Frontend Engineer", "Marketing Coordinator"). If the company is mentioned, then add the company's name in front of the role (eg: Amazon Frontend Engineer).
+2. Role should be properly capitalized (e.g., "Frontend Engineer", "Marketing Coordinator"). IMPORTANT: If a company name is mentioned in the input (e.g., "Netflix", "Amazon", "Google"), it MUST be added as a prefix to the role (e.g., "Netflix Software Developer", "Amazon Frontend Engineer"). Always extract company names from the input and place them before the role.
 3. Level should be properly capitalized single words (e.g., "Entry", "Junior", "Mid", "Senior", "Lead") or null for non-hierarchical positions.
 4. Tags must be single words with first letter capitalized (e.g., "React", "Marketing", "Biology").
 5. Tags should be simple and fundamental to the role (prefer "React" over "ReactComponents").
