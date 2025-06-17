@@ -22,7 +22,6 @@ import {
   EllipsisVerticalIcon,
 } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
-import RoleBadge from './RoleBadge';
 import { Interview } from '@supabase/types';
 
 interface InterviewDialogProps {
@@ -49,7 +48,7 @@ export default function InterviewDialog({
         <DialogHeader className="relative">
           <DialogTitle className="flex flex-row gap-2 items-center">
             {interview.role}
-            <RoleBadge level={interview.level as 'junior' | 'mid' | 'senior'} />
+            <p>{interview.level}</p>
           </DialogTitle>
           <div className="flex flex-row gap-4 text-sm">
             <div className="flex flex-row items-center gap-2">

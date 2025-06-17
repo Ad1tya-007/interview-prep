@@ -31,7 +31,6 @@ import { DataTableViewOptions } from './data-table-view-options';
 import { DataTablePagination } from './data-table-pagination';
 import { DownloadIcon, StarIcon } from 'lucide-react';
 import { DataTableColumnHeader } from './data-table-column-header';
-import RoleBadge from '../RoleBadge';
 import DeleteButton from './DeleteButton';
 import { useRouter } from 'next/navigation';
 
@@ -80,7 +79,7 @@ const columns: ColumnDef<any>[] = [
     ),
     cell: ({ row }) => {
       const interview = row.original.interviews;
-      return <RoleBadge level={interview.level} />;
+      return <p>{interview.level}</p>;
     },
   },
   {
@@ -94,7 +93,7 @@ const columns: ColumnDef<any>[] = [
     },
   },
   {
-    accessorKey: 'techstack',
+    accessorKey: 'tags',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Tech Stack" />
     ),
@@ -102,9 +101,9 @@ const columns: ColumnDef<any>[] = [
       const interview = row.original.interviews;
       return (
         <div className="flex flex-wrap gap-1">
-          {interview.techstack.map((tech: string) => (
-            <Badge key={tech} className="capitalize">
-              {tech}
+          {interview.tags.map((tag: string) => (
+            <Badge key={tag} className="capitalize">
+              {tag}
             </Badge>
           ))}
         </div>

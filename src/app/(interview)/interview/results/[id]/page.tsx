@@ -51,7 +51,7 @@ interface Report {
     role: string;
     type: string;
     level: string;
-    techstack: string[];
+    tags: string[];
   };
 }
 
@@ -77,7 +77,7 @@ async function getReport(reportId: string): Promise<Report> {
         role,
         type,
         level,
-        techstack
+        tags
       )
     `
     )
@@ -157,7 +157,6 @@ export default async function InterviewResultsPage({
 }) {
   const { id } = await params;
   const report = await getReport(id);
-  console.log(report);
 
   const categories = [
     {
@@ -289,9 +288,9 @@ export default async function InterviewResultsPage({
                       Tech Stack
                     </div>
                     <div className="flex flex-wrap gap-1.5">
-                      {report.interview.techstack.map((tech) => (
-                        <Badge key={tech} className="text-xs">
-                          {tech}
+                      {report.interview.tags.map((tag) => (
+                        <Badge key={tag} className="text-xs">
+                          {tag}
                         </Badge>
                       ))}
                     </div>

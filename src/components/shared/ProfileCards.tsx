@@ -16,7 +16,6 @@ import { useAuth } from '@/context/AuthContext';
 import { CalendarIcon, Loader2Icon, Search, User2Icon } from 'lucide-react';
 import { useState } from 'react';
 import InterviewDialog from './InterviewDialog';
-import RoleBadge from './RoleBadge';
 import InterviewCreateDialog from './InterviewCreateDialog';
 import { Interview } from '@supabase/types';
 
