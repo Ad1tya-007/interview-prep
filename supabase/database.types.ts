@@ -12,31 +12,34 @@ export type Database = {
       interviews: {
         Row: {
           created_at: string
+          description: string
           id: string
           level: string
           questions: Json
           role: string
-          techstack: string[]
+          tags: string[]
           type: string
           user_id: string
         }
         Insert: {
           created_at?: string
+          description: string
           id?: string
           level: string
           questions: Json
           role: string
-          techstack: string[]
+          tags: string[]
           type: string
           user_id: string
         }
         Update: {
           created_at?: string
+          description?: string
           id?: string
           level?: string
           questions?: Json
           role?: string
-          techstack?: string[]
+          tags?: string[]
           type?: string
           user_id?: string
         }

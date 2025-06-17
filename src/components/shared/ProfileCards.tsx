@@ -16,7 +16,6 @@ import { useAuth } from '@/context/AuthContext';
 import { CalendarIcon, Loader2Icon, Search, User2Icon } from 'lucide-react';
 import { useState } from 'react';
 import InterviewDialog from './InterviewDialog';
-import RoleBadge from './RoleBadge';
 import InterviewCreateDialog from './InterviewCreateDialog';
 import { Interview } from '@supabase/types';
 
@@ -36,8 +35,6 @@ export default function ProfileCards({ interviews }: ProfileCardsProps) {
   );
   const [isInterviewCreateModalOpen, setIsInterviewCreateModalOpen] =
     useState(false);
-
-  console.log(interviews);
 
   if (isLoading) {
     return (
@@ -106,10 +103,13 @@ export default function ProfileCards({ interviews }: ProfileCardsProps) {
                 </div>
               </CardDescription>
             </CardHeader>
-            <CardContent className="text-[15px] text-muted-foreground h-[150px] overflow-hidden">
+            <CardContent className="text-[15px] text-muted-foreground h-[150px] overflow-hidden space-y-2">
+              <p className="text-sm text-muted-foreground line-clamp-4">
+                {interview.description}
+              </p>
               <div className="flex flex-wrap gap-2">
-                {interview.techstack.map((tech, index) => (
-                  <Badge key={index}>{tech}</Badge>
+                {interview.tags.map((tag) => (
+                  <Badge key={tag}>{tag}</Badge>
                 ))}
               </div>
             </CardContent>
@@ -122,9 +122,7 @@ export default function ProfileCards({ interviews }: ProfileCardsProps) {
               </Button>
             </CardFooter>
             <div className="absolute -top-0.5 right-0">
-              <RoleBadge
-                level={interview.level as 'entry' | 'mid' | 'senior'}
-              />
+              <Badge>{interview.level}</Badge>
             </div>
           </Card>
         ))}

@@ -24,22 +24,27 @@ export async function POST(request: NextRequest) {
   "communication_skills": {
     "score": <number between 1-10>,
     "comments": "<detailed feedback on communication skills>"
+    "areas_for_improvement": ["<areas for improvement on communication skills>"] if needed else []
   },
   "technical_knowledge": {
     "score": <number between 1-10>,
     "comments": "<detailed feedback on technical knowledge>"
+    "areas_for_improvement": ["<areas for improvement on technical knowledge>"] if needed else []
   },
   "problem_solving": {
     "score": <number between 1-10>,
     "comments": "<detailed feedback on problem solving abilities>"
+    "areas_for_improvement": ["<areas for improvement on problem solving abilities>"] if needed else []
   },
   "cultural_fit": {
     "score": <number between 1-10>,
     "comments": "<detailed feedback on cultural fit>"
+    "areas_for_improvement": ["<areas for improvement on cultural fit>"] if needed else []
   },
   "confidence_and_clarity": {
     "score": <number between 1-10>,
     "comments": "<detailed feedback on confidence and clarity>"
+    "areas_for_improvement": ["<areas for improvement on confidence and clarity>"] if needed else []
   }
 }
 
@@ -62,15 +67,13 @@ Provide constructive, professional feedback based on the candidate's responses d
       console.error('Failed to parse feedback JSON:', parseError);
       // Fallback feedback structure
       feedback = {
-        communication_skills: { score: 7, comments: "Feedback generated successfully" },
-        technical_knowledge: { score: 7, comments: "Feedback generated successfully" },
-        problem_solving: { score: 7, comments: "Feedback generated successfully" },
-        cultural_fit: { score: 7, comments: "Feedback generated successfully" },
-        confidence_and_clarity: { score: 7, comments: "Feedback generated successfully" }
+        communication_skills: { score: 7, comments: "Feedback generated successfully", areas_for_improvement: [] },
+        technical_knowledge: { score: 7, comments: "Feedback generated successfully", areas_for_improvement: [] },
+        problem_solving: { score: 7, comments: "Feedback generated successfully", areas_for_improvement: [] },
+        cultural_fit: { score: 7, comments: "Feedback generated successfully", areas_for_improvement: [] },
+        confidence_and_clarity: { score: 7, comments: "Feedback generated successfully", areas_for_improvement: [] }
       };
     }
-
-    console.log('Feedback generated successfully');
     
     // Return success response
     return NextResponse.json({ 

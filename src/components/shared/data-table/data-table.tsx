@@ -31,10 +31,16 @@ import { DataTableViewOptions } from './data-table-view-options';
 import { DataTablePagination } from './data-table-pagination';
 import { DownloadIcon, StarIcon } from 'lucide-react';
 import { DataTableColumnHeader } from './data-table-column-header';
-import RoleBadge from '../RoleBadge';
 import DeleteButton from './DeleteButton';
-import RepeatButton from './RepeatButton';
 import { useRouter } from 'next/navigation';
+
+const categories = [
+  { key: 'communication_skills' },
+  { key: 'technical_knowledge' },
+  { key: 'problem_solving' },
+  { key: 'cultural_fit' },
+  { key: 'confidence_and_clarity' },
+];
 
 interface DataTableProps<TData> {
   data: TData[];
@@ -73,7 +79,7 @@ const columns: ColumnDef<any>[] = [
     ),
     cell: ({ row }) => {
       const interview = row.original.interviews;
-      return <RoleBadge level={interview.level} />;
+      return <p>{interview.level}</p>;
     },
   },
   {
@@ -87,7 +93,7 @@ const columns: ColumnDef<any>[] = [
     },
   },
   {
-    accessorKey: 'techstack',
+    accessorKey: 'tags',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Tech Stack" />
     ),
@@ -95,9 +101,9 @@ const columns: ColumnDef<any>[] = [
       const interview = row.original.interviews;
       return (
         <div className="flex flex-wrap gap-1">
-          {interview.techstack.map((tech: string) => (
-            <Badge key={tech} className="capitalize">
-              {tech}
+          {interview.tags.map((tag: string) => (
+            <Badge key={tag} className="capitalize">
+              {tag}
             </Badge>
           ))}
         </div>
@@ -109,11 +115,17 @@ const columns: ColumnDef<any>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Rating" />
     ),
-    cell: () => {
+    cell: ({ row }) => {
+      const averageScore =
+        categories.reduce(
+          (sum, category) => sum + row.original.feedback[category.key].score,
+          0
+        ) / categories.length;
+
       return (
         <div className="flex items-center gap-2">
           <StarIcon className="w-4 h-4 text-yellow-400 fill-yellow-400" />
-          <span className="font-medium">85 %</span>
+          <span className="font-medium">{averageScore * 10} %</span>
         </div>
       );
     },
@@ -124,7 +136,6 @@ const columns: ColumnDef<any>[] = [
     cell: () => {
       return (
         <div className="flex items-center gap-2">
-          <RepeatButton />
           <DeleteButton />
           <Button variant="outline" size="sm">
             <DownloadIcon className="w-3 h-3" />

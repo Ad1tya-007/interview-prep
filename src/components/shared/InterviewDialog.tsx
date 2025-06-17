@@ -22,7 +22,6 @@ import {
   EllipsisVerticalIcon,
 } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
-import RoleBadge from './RoleBadge';
 import { Interview } from '@supabase/types';
 
 interface InterviewDialogProps {
@@ -45,11 +44,11 @@ export default function InterviewDialog({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="w-[600px] ">
+      <DialogContent className="w-[600px]">
         <DialogHeader className="relative">
           <DialogTitle className="flex flex-row gap-2 items-center">
             {interview.role}
-            <RoleBadge level={interview.level as 'junior' | 'mid' | 'senior'} />
+            <p>{interview.level}</p>
           </DialogTitle>
           <div className="flex flex-row gap-4 text-sm">
             <div className="flex flex-row items-center gap-2">
@@ -64,8 +63,8 @@ export default function InterviewDialog({
           <div className="flex flex-row items-center gap-2 text-sm text-muted-foreground">
             <p>Tags: </p>
             <div className="flex flex-row items-center gap-2">
-              {interview.techstack.map((tech: string) => (
-                <Badge key={tech}>{tech}</Badge>
+              {interview.tags.map((tag: string) => (
+                <Badge key={tag}>{tag}</Badge>
               ))}
             </div>
           </div>

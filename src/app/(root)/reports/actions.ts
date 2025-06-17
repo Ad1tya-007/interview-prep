@@ -18,7 +18,7 @@ export async function getReportsOfCurrentUser() {
       interviews (
         type,
         role,
-        techstack,
+        tags,
         level
       )
     `)

@@ -122,8 +122,6 @@ Provide constructive, professional feedback based on the candidate's responses d
         { status: 500 }
       );
     }
-
-    console.log('Feedback generated and saved successfully');
     
     return NextResponse.json({ 
       success: true, 

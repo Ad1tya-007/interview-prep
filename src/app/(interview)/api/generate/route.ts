@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/server'
 import { generateInterviewQuestionsPrompt } from '@/lib/prompts'
 import { openai } from '@/lib/openai'
-import { randomUUID } from 'crypto'
+import { revalidatePath } from 'next/cache'
 
 // Just for testing
 export async function GET() {
@@ -12,21 +12,22 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   try {
     // Get request body
-    const { type, role, level, techstack, amount, additionalInfo, userid } = await req.json();
-    
-    // Use the provided userid if it exists and looks like a valid UUID, otherwise generate one
-    const finalUserid = userid && userid.length > 10 ? userid : randomUUID();
+    const { info, userid } = await req.json();
 
-    const prompt = generateInterviewQuestionsPrompt({type, role, level, techstack, amount, additionalInfo})
+    if(!info || !userid) {
+      return NextResponse.json({ error: 'Missing info or userid' }, { status: 400 })
+    }
+  
+    const prompt = generateInterviewQuestionsPrompt({ info })
 
     // Generate questions using OpenAI
     const completion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
+      model: "gpt-4-0125-preview",
       stream: false,
       messages: [
         {
           role: "system",
-          content: "You are an expert technical interviewer. Your responses must be in valid JSON format. Return an array of questions."
+          content: "You are an expert interviewer. Your responses must be in valid JSON format following the exact structure specified in the prompt."
         },
         {
           role: "user",
@@ -34,13 +35,16 @@ export async function POST(req: NextRequest) {
         }
       ],
       response_format: { type: "json_object" },
-      temperature: 0.3,
-      max_tokens: 150, 
+      temperature: 0.7,
+      max_tokens: 2000
     })
 
-    const response = JSON.parse(completion.choices[0].message.content || '[]');
+    const response = JSON.parse(completion.choices[0].message.content || '{}');
 
-    const questions = Array.isArray(response) ? response : response.questions || [];
+    // Validate response structure
+    if (!response.type || !response.role || !response.questions || !Array.isArray(response.questions)) {
+      throw new Error('Invalid response format from AI');
+    }
 
     // Use regular server client now that RLS policy is relaxed
     const supabase = await createClient()
@@ -49,12 +53,13 @@ export async function POST(req: NextRequest) {
     const { error: dbError } = await supabase
       .from('interviews')
       .insert({
-        user_id: finalUserid,
-        questions: questions,
-        type: type,
-        role: role,
-        level: level,
-        techstack: techstack,
+        user_id: userid,
+        questions: response.questions,
+        type: response.type,
+        role: response.role,
+        level: response.level,
+        tags: response.tags,
+        description: response.description,
       })
       .select()
       .single()
@@ -67,12 +72,22 @@ export async function POST(req: NextRequest) {
       )
     }
 
+    revalidatePath('/interviews')
+
     return NextResponse.json({ 
-      success: true, 
-      questions, 
+      success: true,
+      interview: {
+        type: response.type,
+        role: response.role,
+        level: response.level,
+        tags: response.tags,
+        questions: response.questions,
+        description: response.description,
+      }
     })
 
   } catch (error) {
+    console.error('Error:', error);
     return NextResponse.json(
       { 
         error: error instanceof Error ? error.message : 'Something went wrong'
