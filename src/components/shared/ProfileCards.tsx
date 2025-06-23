@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import {
@@ -31,7 +30,7 @@ export default function ProfileCards({ interviews }: ProfileCardsProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const isPro = true;
 
-  const [open, setOpen] = useState(false);
+  const [isSelectedInterviewOpen, setIsSelectedInterviewOpen] = useState(false);
   const [selectedInterview, setSelectedInterview] = useState<Interview | null>(
     null
   );
@@ -50,14 +49,14 @@ export default function ProfileCards({ interviews }: ProfileCardsProps) {
     interview.role.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const handleViewInterview = (interview: any) => {
+  const handleViewInterview = (interview: Interview) => {
     setSelectedInterview(interview);
-    setOpen(true);
+    setIsSelectedInterviewOpen(true);
   };
 
   const handleCloseInterview = () => {
     setSelectedInterview(null);
-    setOpen(false);
+    setIsSelectedInterviewOpen(false);
   };
 
   return (
@@ -128,8 +127,8 @@ export default function ProfileCards({ interviews }: ProfileCardsProps) {
       </div>
 
       <InterviewDialog
-        interview={selectedInterview as Interview | any}
-        open={open}
+        interview={selectedInterview}
+        open={isSelectedInterviewOpen && selectedInterview !== null}
         setOpen={handleCloseInterview}
       />
       <InterviewCreateDialog

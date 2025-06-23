@@ -52,12 +52,14 @@ interface InterviewEditDialogProps {
   interview: Interview;
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
+  onEditSuccess?: (updatedInterview: Interview) => void;
 }
 
 export default function InterviewEditDialog({
   interview,
   isOpen,
   onOpenChange,
+  onEditSuccess,
 }: InterviewEditDialogProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
@@ -74,12 +76,13 @@ export default function InterviewEditDialog({
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setIsSubmitting(true);
-      await updateInterview(interview.id, {
+      const updatedInterview = await updateInterview(interview.id, {
         ...values,
         level: interview.level || '',
         type: interview.type,
       });
       toast.success('Interview updated successfully');
+      onEditSuccess?.(updatedInterview);
       onOpenChange(false);
       router.refresh();
     } catch (error) {
@@ -94,7 +97,8 @@ export default function InterviewEditDialog({
     const currentTags = form.getValues('tags');
     form.setValue(
       'tags',
-      currentTags.filter((tag) => tag !== tagToRemove)
+      currentTags.filter((tag) => tag !== tagToRemove),
+      { shouldValidate: true }
     );
   };
 
@@ -102,7 +106,7 @@ export default function InterviewEditDialog({
     if (event.key === 'Enter' && event.currentTarget.value) {
       event.preventDefault();
       const newTag = event.currentTarget.value.trim();
-      const currentTags = form.getValues('tags');
+      const currentTags = form.getValues('tags') || [];
 
       if (currentTags.length >= 4) {
         toast.error('You can only add up to 4 tags');
@@ -111,7 +115,9 @@ export default function InterviewEditDialog({
       }
 
       if (newTag && !currentTags.includes(newTag)) {
-        form.setValue('tags', [...currentTags, newTag]);
+        form.setValue('tags', [...currentTags, newTag], {
+          shouldValidate: true,
+        });
         event.currentTarget.value = '';
       }
     }

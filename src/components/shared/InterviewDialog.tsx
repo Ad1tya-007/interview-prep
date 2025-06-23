@@ -23,29 +23,19 @@ import {
 } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import InterviewTypeBadge from './InterviewTypeBadge';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import InterviewDeleteDialog from './InterviewDeleteDialog';
 import InterviewEditDialog from './InterviewEditDialog';
-
-interface Interview {
-  id: string;
-  role: string;
-  level: string;
-  type: string;
-  created_at: string;
-  tags: string[];
-  description: string;
-  questions: string[];
-}
+import { Interview } from '@supabase/types';
 
 interface InterviewDialogProps {
-  interview: Interview;
+  interview: Interview | null;
   open: boolean;
   setOpen: (open: boolean) => void;
 }
 
 export default function InterviewDialog({
-  interview,
+  interview: initialInterview,
   open,
   setOpen,
 }: InterviewDialogProps) {
@@ -53,10 +43,21 @@ export default function InterviewDialog({
   const router = useRouter();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [interview, setInterview] = useState<Interview | null>(
+    initialInterview
+  );
+
+  useEffect(() => {
+    setInterview(initialInterview);
+  }, [initialInterview]);
 
   const isExplore = pathname === '/explore';
 
-  if (!interview) return null;
+  if (!interview || !open) return null;
+
+  const handleEditSuccess = (updatedInterview: Interview) => {
+    setInterview(updatedInterview);
+  };
 
   return (
     <>
@@ -136,7 +137,8 @@ export default function InterviewDialog({
       <InterviewEditDialog
         isOpen={isEditDialogOpen}
         onOpenChange={setIsEditDialogOpen}
-        interview={interview as Interview | any}
+        interview={interview}
+        onEditSuccess={handleEditSuccess}
       />
     </>
   );

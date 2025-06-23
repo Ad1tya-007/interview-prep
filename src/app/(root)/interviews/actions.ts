@@ -63,21 +63,21 @@ export async function updateInterview(id: string, data: UpdateInterviewData) {
     throw new Error('User not found')
   }
 
-  const { error } = await supabase
+  const { data: updatedInterview, error } = await supabase
     .from('interviews')
     .update({
       role: data.role,
       description: data.description,
-      level: data.level,
-      type: data.type,
       tags: data.tags,
     })
     .eq('id', id)
     .eq('user_id', user.id)
+    .select()
+    .single()
 
   if (error) {
     throw error
   }
 
-  return { success: true }
+  return updatedInterview
 }
