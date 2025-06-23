@@ -9,17 +9,14 @@ import {
   CardHeader,
   Input,
   Badge,
-  CardDescription,
   CardTitle,
 } from '@/components/ui';
 import { useAuth } from '@/context/AuthContext';
 import {
   ArrowDown,
   ArrowUp,
-  CalendarIcon,
   Loader2Icon,
   Search,
-  StarIcon,
   User2Icon,
   X,
 } from 'lucide-react';
@@ -47,72 +44,110 @@ export default function ExploreCards() {
 
   type Interview = {
     id: number;
-    title: string;
+    role: string;
+    level: 'Junior' | 'Mid' | 'Senior';
     description: string;
-    date: string;
     tags: string[];
-    rating?: number;
-    type: 'junior' | 'mid' | 'senior';
+    type: 'Behavioral' | 'Technical' | 'Mixed';
+    questions: string[];
   };
 
   const interviews: Interview[] = useMemo(
     () => [
       {
         id: 1,
-        title: 'Google Frontend Interview',
+        role: 'Google Frontend Interview',
+        level: 'Junior',
         description:
           "This frontend interview delves into the intricacies of JavaScript, React, and system design, providing a comprehensive assessment of a candidate's skills in these areas.",
-        date: '2023-05-15',
+
         tags: ['Frontend', 'React', 'JavaScript'],
-        type: 'junior',
+        type: 'Technical',
+        questions: [
+          'Explain the virtual DOM in React and how it improves performance.',
+          'What are React hooks? Explain useState and useEffect.',
+          'Implement a debounce function from scratch.',
+          'How would you optimize the performance of a React application?',
+        ],
       },
       {
         id: 2,
-        title: 'Amazon Backend Interview',
+        role: 'Amazon Backend Interview',
+        level: 'Mid',
         description:
           'The backend focused interview at Amazon covers a wide range of topics including algorithms, system design, and AWS services, ensuring that candidates have a deep understanding of these critical areas.',
-        date: '2023-06-22',
         tags: ['Backend', 'AWS', 'Algorithms'],
-        rating: 85,
-        type: 'mid',
+        type: 'Technical',
+        questions: [
+          'Design a scalable URL shortening service.',
+          'Explain the CAP theorem and its implications in distributed systems.',
+          'How would you handle race conditions in a distributed system?',
+          'Describe the architecture of a real-time notification system using AWS services.',
+        ],
       },
       {
         id: 3,
-        title: 'Microsoft Full Stack Interview',
+        role: 'Microsoft Full Stack Interview',
+        level: 'Senior',
         description:
           'Full stack interview with questions on React, .NET, and database design.',
-        date: '2023-07-10',
+
         tags: ['Fullstack', 'React', '.NET'],
-        rating: 78,
-        type: 'senior',
+        type: 'Mixed',
+        questions: [
+          'How would you design a real-time collaboration feature like Google Docs?',
+          'Explain dependency injection in .NET Core and its benefits.',
+          'Design a database schema for a social media platform.',
+          'How would you implement authentication and authorization in a full-stack application?',
+        ],
       },
       {
         id: 4,
-        title: 'Facebook Interview',
+        role: 'Facebook Interview',
+        level: 'Senior',
         description:
           'System design interview focusing on scalable architectures for social media platforms.',
-        date: '2023-08-05',
+
         tags: ['System Design', 'Scalability'],
-        rating: 89,
-        type: 'senior',
+        type: 'Behavioral',
+        questions: [
+          'Design the news feed system of Facebook.',
+          'How would you handle consistent hashing in a distributed cache?',
+          'Explain how you would implement a real-time chat system at scale.',
+          'Design a content delivery network (CDN) from scratch.',
+        ],
       },
       {
         id: 5,
-        title: 'Netflix UI Engineer Interview',
+        role: 'Netflix UI Engineer',
+        level: 'Junior',
         description:
           'UI engineering interview with focus on responsive design and performance optimization.',
-        date: '2023-09-12',
+
         tags: ['UI', 'Frontend', 'Performance'],
-        type: 'junior',
+        type: 'Technical',
+        questions: [
+          'How would you implement infinite scrolling in a video catalog?',
+          'Explain CSS Grid and Flexbox. When would you use one over the other?',
+          'How would you optimize the loading performance of a web application?',
+          'Implement a responsive navigation menu without using any framework.',
+        ],
       },
       {
         id: 6,
-        title: 'Twitter Backend Interview',
+        role: 'Twitter Backend',
+        level: 'Mid',
         description:
           'Backend interview covering distributed systems and real-time processing.',
-        date: '2023-10-08',
+
         tags: ['Backend', 'Distributed Systems'],
-        type: 'mid',
+        type: 'Technical',
+        questions: [
+          "Design Twitter's trending topics feature.",
+          'How would you implement rate limiting in a distributed system?',
+          'Explain how you would handle data partitioning in a large-scale system?',
+          'Design a system that can handle millions of concurrent WebSocket connections.',
+        ],
       },
     ],
     []
@@ -153,7 +188,7 @@ export default function ExploreCards() {
   const filteredInterviews = interviews.filter((interview) => {
     // Filter by search query (title or description)
     const matchesSearch =
-      interview.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      interview.role.toLowerCase().includes(searchQuery.toLowerCase()) ||
       interview.description.toLowerCase().includes(searchQuery.toLowerCase());
 
     // Filter by tags if any are selected
@@ -229,20 +264,8 @@ export default function ExploreCards() {
                 <div className="h-8 w-8 flex items-center justify-center bg-primary text-primary-foreground rounded-full">
                   <User2Icon className="h-5 w-5" />
                 </div>
-                <p className="line-clamp-1">{interview.title}</p>
+                <p className="line-clamp-1">{interview.role}</p>
               </CardTitle>
-              <CardDescription className="grid grid-cols-3">
-                <div className="flex flex-row items-center gap-2 col-span-2">
-                  <CalendarIcon className="h-4 w-4" />
-                  <p>{interview.date}</p>
-                </div>
-                {interview.rating && (
-                  <div className="flex flex-row items-center gap-2">
-                    <StarIcon className="h-4 w-4 text-yellow-400 fill-yellow-400" />
-                    <p>{interview.rating}%</p>
-                  </div>
-                )}
-              </CardDescription>
             </CardHeader>
             <CardContent className="text-[15px] text-muted-foreground h-[150px] overflow-hidden">
               <p className="line-clamp-4 text-sm">{interview.description}</p>
@@ -260,9 +283,6 @@ export default function ExploreCards() {
                 View
               </Button>
             </CardFooter>
-            {/* <div className="absolute -top-0.5 right-0">
-              <RoleBadge type={interview.type} />
-            </div> */}
           </Card>
         ))}
       </div>

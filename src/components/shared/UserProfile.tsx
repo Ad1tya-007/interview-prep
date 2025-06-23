@@ -25,7 +25,7 @@ export default function UserProfile({ interviewCount }: UserProfileProps) {
   return (
     <Card className="w-full relative">
       <CardHeader className="flex flex-row items-center gap-4 pb-2">
-        <Avatar className="h-16 w-16 border-2 border-primary">
+        <Avatar className="h-16 w-16 border-primary">
           {isLoading ? (
             <>
               <Skeleton className="h-16 w-16" />
