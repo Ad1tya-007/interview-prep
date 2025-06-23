@@ -6,14 +6,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui';
-import {
-  Star,
-  Compass,
-  NotepadText,
-  LucideIcon,
-  Send,
-  LifeBuoy,
-} from 'lucide-react';
+import { Star, NotepadText, LucideIcon, Send, LifeBuoy } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 type NavItem = {
@@ -23,7 +16,6 @@ type NavItem = {
 };
 
 const upperItems: NavItem[] = [
-  { title: 'Explore', url: '/explore', icon: Compass },
   { title: 'Your Interviews', url: '/interviews', icon: Star },
   { title: 'Reports', url: '/reports', icon: NotepadText },
 ];

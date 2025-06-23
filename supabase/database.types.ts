@@ -14,7 +14,7 @@ export type Database = {
           created_at: string
           description: string
           id: string
-          level: string
+          level: string | null
           questions: Json
           role: string
           tags: string[]
@@ -25,7 +25,7 @@ export type Database = {
           created_at?: string
           description: string
           id?: string
-          level: string
+          level?: string | null
           questions: Json
           role: string
           tags: string[]
@@ -36,7 +36,7 @@ export type Database = {
           created_at?: string
           description?: string
           id?: string
-          level?: string
+          level?: string | null
           questions?: Json
           role?: string
           tags?: string[]

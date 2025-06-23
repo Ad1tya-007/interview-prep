@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import {
@@ -13,11 +12,13 @@ import {
   CardTitle,
 } from '@/components/ui';
 import { useAuth } from '@/context/AuthContext';
-import { CalendarIcon, Loader2Icon, Search, User2Icon } from 'lucide-react';
+import { CalendarIcon, Loader2Icon, Search } from 'lucide-react';
 import { useState } from 'react';
 import InterviewDialog from './InterviewDialog';
 import InterviewCreateDialog from './InterviewCreateDialog';
 import { Interview } from '@supabase/types';
+import InterviewTypeBadge from './InterviewTypeBadge';
+import LevelBadge from './LevelBadge';
 
 interface ProfileCardsProps {
   interviews: Interview[];
@@ -29,7 +30,7 @@ export default function ProfileCards({ interviews }: ProfileCardsProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const isPro = true;
 
-  const [open, setOpen] = useState(false);
+  const [isSelectedInterviewOpen, setIsSelectedInterviewOpen] = useState(false);
   const [selectedInterview, setSelectedInterview] = useState<Interview | null>(
     null
   );
@@ -48,14 +49,14 @@ export default function ProfileCards({ interviews }: ProfileCardsProps) {
     interview.role.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const handleViewInterview = (interview: any) => {
+  const handleViewInterview = (interview: Interview) => {
     setSelectedInterview(interview);
-    setOpen(true);
+    setIsSelectedInterviewOpen(true);
   };
 
   const handleCloseInterview = () => {
     setSelectedInterview(null);
-    setOpen(false);
+    setIsSelectedInterviewOpen(false);
   };
 
   return (
@@ -87,19 +88,19 @@ export default function ProfileCards({ interviews }: ProfileCardsProps) {
           <Card key={interview.id} className="relative">
             <CardHeader>
               <CardTitle className="flex flex-row items-center gap-2 font-normal text-muted-foreground">
-                <div className="h-8 w-8 flex items-center justify-center bg-primary text-primary-foreground rounded-full">
-                  <User2Icon className="h-5 w-5" />
-                </div>
-                <p className="line-clamp-1">{interview.role}</p>
+                <p className="line-clamp-1 font-semibold text-foreground hover:underline">
+                  {interview.role}
+                </p>
               </CardTitle>
-              <CardDescription className="grid grid-cols-3">
-                <div className="flex flex-row items-center gap-2 col-span-2">
+              <CardDescription className="mt-2 flex flex-row justify-between">
+                <div className="flex flex-row items-center gap-2">
                   <CalendarIcon className="h-4 w-4" />
                   <p>{new Date(interview.created_at).toDateString()}</p>
                 </div>
 
                 <div className="flex flex-row items-center gap-2">
-                  <p>{interview.type}</p>
+                  <InterviewTypeBadge type={interview.type} />
+                  {interview.level && <LevelBadge level={interview.level} />}
                 </div>
               </CardDescription>
             </CardHeader>
@@ -121,16 +122,13 @@ export default function ProfileCards({ interviews }: ProfileCardsProps) {
                 View
               </Button>
             </CardFooter>
-            <div className="absolute -top-0.5 right-0">
-              <Badge>{interview.level}</Badge>
-            </div>
           </Card>
         ))}
       </div>
 
       <InterviewDialog
-        interview={selectedInterview as Interview}
-        open={open}
+        interview={selectedInterview}
+        open={isSelectedInterviewOpen && selectedInterview !== null}
         setOpen={handleCloseInterview}
       />
       <InterviewCreateDialog

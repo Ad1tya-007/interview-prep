@@ -86,7 +86,7 @@ async function getReport(reportId: string): Promise<Report> {
     .single();
 
   if (error || !report || !report.interviews) {
-    redirect('/explore');
+    redirect('/interviews');
   }
 
   // Transform the data to match our interface
