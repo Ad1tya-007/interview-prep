@@ -114,8 +114,8 @@ export default function Interview({ questions, interviewId }: InterviewProps) {
       router.push(`/interview/results/${result.reportId}`);
     } catch (error) {
       console.error('Error generating feedback:', error);
-      // Fallback: redirect to explore page
-      router.push('/explore');
+      // Fallback: redirect to interviews page
+      router.push('/interviews');
     }
   }, [messages, interviewId, userId, router]);
 
@@ -400,8 +400,8 @@ Start with the first question from the list above.`,
                     <div
                       className={`max-w-[80%] rounded-lg px-4 py-2 ${
                         message.role === 'assistant'
-                          ? 'bg-primary/10 text-primary-foreground'
-                          : 'bg-secondary/10 text-secondary-foreground'
+                          ? 'bg-secondary text-secondary-foreground'
+                          : 'bg-primary text-primary-foreground'
                       }`}>
                       {message.content}
                     </div>

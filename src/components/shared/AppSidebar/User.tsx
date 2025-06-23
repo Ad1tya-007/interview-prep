@@ -30,6 +30,9 @@ export function User() {
   const { user, logout } = useAuth();
   const { isMobile } = useSidebar();
 
+  const avatarUrl =
+    user?.user_metadata?.picture || user?.user_metadata?.avatar_url || '';
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -39,14 +42,13 @@ export function User() {
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground">
               <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage
-                  src={
-                    user?.user_metadata?.picture ||
-                    user?.user_metadata?.avatar_url
-                  }
-                  alt={user?.email}
-                  referrerPolicy="no-referrer"
-                />
+                {avatarUrl && (
+                  <AvatarImage
+                    src={avatarUrl || null}
+                    alt={user?.email}
+                    referrerPolicy="no-referrer"
+                  />
+                )}
                 <AvatarFallback className="rounded-lg">
                   {user?.email?.split('')[0].toUpperCase()}
                 </AvatarFallback>

@@ -38,7 +38,7 @@ export default function AuthPage() {
     }
 
     if (result?.success) {
-      router.push('/explore');
+      router.push('/interviews');
     }
   };
 
