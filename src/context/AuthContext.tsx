@@ -10,7 +10,7 @@ import {
 import { User, AuthChangeEvent, Session } from '@supabase/supabase-js';
 import { createClient } from '@supabase/client';
 import { usePathname, useRouter } from 'next/navigation';
-import { logout as serverLogout } from '@/app/auth/actions';
+import { logout as serverLogout } from '@/app/(auth)/actions';
 
 type AuthContextType = {
   user: User | null;
@@ -28,6 +28,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Use createClient which is already a singleton with caching
   const supabase = createClient();
+
+  // Define public routes that don't require authentication
+  const publicRoutes = ['/', '/signup', '/login'];
+  const isPublicRoute = publicRoutes.includes(pathname);
 
   // Function to handle user authentication and ensure user exists in the database
   const handleUserAuthentication = async (authUser: User | null) => {
@@ -66,10 +70,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
 
         // Handle immediate redirects based on auth events
-        if (event === 'SIGNED_IN' && pathname === '/auth') {
+        if (event === 'SIGNED_IN' && isPublicRoute) {
           router.replace('/interviews');
         } else if (event === 'SIGNED_OUT') {
-          router.replace('/auth');
+          router.replace('/');
         }
       }
     );
@@ -77,18 +81,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => {
       subscription.unsubscribe();
     };
-  }, [supabase, pathname, router]);
-
-  // Define public routes that don't require authentication
-  const publicRoutes = ['/', '/auth'];
-  const isPublicRoute = publicRoutes.includes(pathname);
+  }, [supabase, pathname, router, isPublicRoute]);
 
   // Handle redirects based on auth state and current path
   useEffect(() => {
     if (!isLoading) {
       if (!user && !isPublicRoute) {
         // Redirect to auth page if trying to access protected route without auth
-        router.replace('/auth');
+        router.replace('/');
       } else if (user && isPublicRoute) {
         // Redirect authenticated users away from auth page
         router.replace('/interviews');
@@ -108,7 +108,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       // Handle client-side state update and navigation
       setUser(null);
-      router.replace('/auth');
+      router.replace('/');
     } catch (error) {
       console.error('Error signing out:', error);
     }

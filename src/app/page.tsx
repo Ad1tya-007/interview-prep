@@ -38,7 +38,7 @@ export default function Home() {
         </div>
 
         <div>
-          <Link href="/auth">
+          <Link href="/login">
             <Button size="lg" className="px-8 py-6 text-lg">
               Start Practicing <ArrowRight className="ml-2" />
             </Button>
