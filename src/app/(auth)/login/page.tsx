@@ -24,7 +24,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Separator } from '@/components/ui';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const loginSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
@@ -45,6 +45,15 @@ export default function LoginPage() {
     },
   });
 
+  // Check for error in URL parameters
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const errorParam = urlParams.get('error');
+    if (errorParam === 'auth_failed') {
+      setError('Authentication failed. Please try again.');
+    }
+  }, []);
+
   const handleGoogleSignIn = async () => {
     const result = await signInWithGoogle();
 
@@ -55,7 +64,7 @@ export default function LoginPage() {
 
     // If we have a URL, redirect the browser to it
     if (result?.url) {
-      router.push(result.url);
+      window.location.href = result.url; // Use window.location.href for OAuth redirects
     } else {
       setError('Authentication failed. No redirect URL was provided.');
     }

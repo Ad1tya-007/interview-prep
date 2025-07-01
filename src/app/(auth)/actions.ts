@@ -55,13 +55,13 @@ export async function logout(): Promise<AuthResponse> {
 
 export async function signInWithGoogle(): Promise<AuthResponse> {
   const supabase = await createClient()
-  const url = 'http://localhost:3000'
+  const url = process.env.NEXT_PUBLIC_LINK || 'http://localhost:3000'
 
   try {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${url}/auth/callback`,
+        redirectTo: `${url}/callback`,
         skipBrowserRedirect: true // This prevents automatic redirect
       },
     })
